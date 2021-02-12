@@ -1,0 +1,131 @@
+import 'package:cz2006/services/auth_servcie.dart';
+import 'package:cz2006/services/views/open_views/myMain.dart';
+import 'package:cz2006/services/views/open_views/signUp_view.dart';
+import 'package:flutter/material.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
+
+// homePage login alr
+
+//logined in but not verified
+//https://pub.dev/packages/convex_bottom_bar/versions/2.0.0#custom-example
+
+class HomePage extends StatefulWidget {
+  AuthenticationServices auth;
+  VoidCallback onSignOut; //other widget function can giev to this widget
+  String userID, userEmail;
+
+  HomePage({Key key, this.auth, this.onSignOut, this.userID, this.userEmail})
+      : super(key: key);
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  bool _isEmailVerified = false;
+  int selectedpage = 3;
+  final _pageOption = [myHome(),myHome(),myHome(),myHome(),myHome()];
+
+  @override
+  void initState() {
+    super.initState();
+    _checkEmailVerification();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final Size size = MediaQuery.of(context).size;
+    return new Scaffold(
+      backgroundColor: Colors.white10,
+      appBar: new AppBar(
+        title: Text("Flutter Auth Email"),
+        actions: [
+          FlatButton(
+            onPressed: _signOut,
+            child: Text("SignOut"),
+            onLongPress: _signOut,
+          )
+        ],
+      ),
+      body: _pageOption[selectedpage],
+      bottomNavigationBar: ConvexAppBar(
+        items: [
+          TabItem(icon: Icons.map, title: 'map'),
+          TabItem(icon: Icons.note_add, title: 'bites'),
+          TabItem(icon: Icons.cake, title: 'main page'),
+          TabItem(icon: Icons.group, title: 'community'),
+          TabItem(icon: Icons.person, title: 'profile'),
+        ],
+        backgroundColor: Colors.white,
+        activeColor: primaryColor,
+        curveSize: 100,
+        top: -30,
+        style: TabStyle.reactCircle,
+        color: Colors.grey,
+        onTap: (int i) => setState(() {
+          selectedpage = i;
+        }),
+      ),
+    );
+  }
+
+  void _checkEmailVerification() async {
+    _isEmailVerified = await widget.auth.isEmailVerified();
+    if (!_isEmailVerified) {
+      _showVerifyEmailDialog();
+    }
+  }
+
+  void _showVerifyEmailDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: new Text("please verify your email"),
+            content: new Text("We need you verify email to"),
+            actions: [
+              new FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _sendVerifyEmail();
+                  },
+                  child: Text("send")),
+              new FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("dismiss")),
+            ],
+          );
+        });
+  }
+
+  void _sendVerifyEmail() {
+    widget.auth.sendEmailVerification();
+    _showVerifyEmailSentDialog();
+  }
+
+  void _showVerifyEmailSentDialog() {
+    AlertDialog(
+      title: new Text("Thank you"),
+      content: new Text("Link has been sent to your email"),
+      actions: [
+        new FlatButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text("ok")),
+      ],
+    );
+  }
+
+  void _signOut() async {
+    try {
+      await widget.auth.signOut();
+
+      widget.onSignOut();
+    } catch (e) {
+      print(e);
+    }
+  }
+}
