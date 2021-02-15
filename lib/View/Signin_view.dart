@@ -1,5 +1,7 @@
-import 'package:cz2006/services/auth_servcie.dart';
-import 'package:cz2006/services/views/open_views/signUp_view.dart';
+import 'package:cz2006/View/signUp_view.dart';
+import 'package:cz2006/controller/UserController.dart';
+import 'package:cz2006/controller/auth_servcie.dart';
+import 'package:cz2006/locator.dart';
 import 'package:flutter/material.dart';
 //import 'package:cz2006/services/auth_servcie.dart'
 import 'package:auto_size_text/auto_size_text.dart';
@@ -25,6 +27,7 @@ class _SignupViewState extends State<SigninView> {
   String _email, _password, _errorMessage;
   bool isLoading;
   bool onlyEmail;
+  bool isVerified;
   @override
   void initState() {
     _errorMessage = "";
@@ -40,7 +43,7 @@ class _SignupViewState extends State<SigninView> {
           title: Text('Firebase Auth'),
         ),
         body: SingleChildScrollView(
-                  child: Stack(children: <Widget>[
+          child: Stack(children: <Widget>[
             Container(
               color: Colors.white,
               height: _height,
@@ -154,10 +157,11 @@ class _SignupViewState extends State<SigninView> {
                             ),
                             TextButton(
                               onPressed: () {
-                                                                  Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder: (context) => SignupView(widget.auth)));
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            SignupView(widget.auth)));
                               },
                               child: Text("create account"),
                             ),
@@ -211,18 +215,18 @@ class _SignupViewState extends State<SigninView> {
       isLoading = true;
     });
 
-    String userID = "";
     try {
-      print("signing now");
-      print(_email);
-      print(_password);
-      userID = await widget.auth.signIn(_email, _password);
-      print("singing alr");
+      await locator
+          .get<UserController>()
+          .signInWithEmailAndPassword(_email, _password);
+      isVerified = await widget.auth.isEmailVerified();
       setState(() {
         isLoading = false;
       });
-      if (userID.length > 0 && userID != null) {
+      if (isVerified) {
         widget.onSignedIn();
+      } else {
+        _showAlertDialog("please verify your email");
       }
     } catch (e) {
       setState(() {

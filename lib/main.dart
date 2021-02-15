@@ -1,13 +1,13 @@
-import 'package:cz2006/home_page.dart';
-import 'package:cz2006/services/auth_servcie.dart';
-import 'package:cz2006/services/views/open_views/Signin_view.dart';
+import 'package:cz2006/controller/auth_servcie.dart';
+import 'package:cz2006/controller/rootPage.dart';
+import 'package:cz2006/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:cz2006/services/views/open_views/signUp_view.dart';
 
 //check if already login, if login then go homepage, if not show login/signup page
 
-
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  setup();
   runApp(MyApp());
 }
 
@@ -28,93 +28,9 @@ class MyApp extends StatelessWidget {
         // or simply save your changes to "hot reload" in a Flutter IDE).
         // Notice that the counter didn't reset back to zero; the application
         // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.green,
       ),
-      home: new myHomeApp(auth: new AuthenticationServices()),
+      home: new RootPage(auth: new AuthenticationServices()),
     );
-  }
-}
-
-class myHomeApp extends StatefulWidget {
-  // auth is constantly changing
-  myHomeApp({this.auth});
-  AuthenticationServices auth;
-
-  @override
-  _myHomeAppState createState() => _myHomeAppState();
-}
-
-enum Authstatus { NOT_LOGIN, LOGIN, UNDETERMINED }
-
-// ignore: camel_case_types
-class _myHomeAppState extends State<myHomeApp> {
-  // the  state is the three attribute _userID, _userEmail
-  Authstatus authStatus = Authstatus.UNDETERMINED;
-  String _userID = "", _userEmail = "";
-  @override
-  void initState() {
-    super.initState();
-    widget.auth.getCurrentUser().then((user) => {
-          setState(() {
-            if (user != null) {
-              // login alr
-              _userID = user?.uid; //
-              print(_userID);
-              _userEmail = user?.email;
-            }
-            // havnt logged in
-            authStatus =
-                user?.uid == null ? Authstatus.NOT_LOGIN : Authstatus.LOGIN;
-          })
-        });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    switch (authStatus) {
-      case Authstatus.UNDETERMINED:
-        return _showLoading();
-        break;
-
-      case Authstatus.NOT_LOGIN:
-        return new SigninView(auth: widget.auth, onSignedIn: _onSignedIn);
-      case Authstatus.LOGIN:
-        return new HomePage(
-          userID: _userID,
-          userEmail: _userEmail,
-          auth: widget.auth,
-          onSignOut: _onSignedOut,
-        );
-      default:
-        return _showLoading();
-    }
-  }
-
-  void _onSignedIn() {
-    widget.auth.getCurrentUser().then((user) {
-      setState(() {
-        _userID = user.uid.toString();
-        _userEmail = user.email.toString();
-      });
-    });
-
-    setState(() {
-      authStatus = Authstatus.LOGIN;
-    });
-  }
-
-  void _onSignedOut() {
-    setState(() {
-      authStatus = Authstatus.NOT_LOGIN;
-      _userID = _userEmail = "";
-    });
-  }
-
-  Widget _showLoading() {
-    return Scaffold(
-        body: Container(
-      alignment: Alignment.center,
-      child: CircularProgressIndicator(),
-    ));
   }
 }

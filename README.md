@@ -23,11 +23,22 @@ wrong email and password format
 4 incorrect email address
 5 correct email, correct address
 
+To do list 
+1.onboard screen
+2. postal code
 
 
 
+get it dependency injection:
+https://www.youtube.com/watch?v=DbV5RV2HRUk&ab_channel=FlutterExplained 
 
 
+https://www.youtube.com/watch?v=0wcWUIP669g&t=314s&ab_channel=FlutterExplained  
 
-https://www.youtube.com/watch?v=wHyxAsYYUq8&ab_channel=StevenDz
-https://www.youtube.com/watch?v=NGKz-huLcv8&ab_channel=IzwebTechnologies
+https://pub.dev/packages/google_maps_place_picker 
+
+TODO LIST:
+https://pub.dev/packages/modal_bottom_sheet 
+https://www.youtube.com/watch?v=WjmQYqRW4zI&t=420s&ab_channel=MJSDCoding 
+
+

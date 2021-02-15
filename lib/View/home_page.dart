@@ -1,6 +1,7 @@
-import 'package:cz2006/services/auth_servcie.dart';
-import 'package:cz2006/services/views/open_views/myMain.dart';
-import 'package:cz2006/services/views/open_views/signUp_view.dart';
+import 'package:cz2006/View/Profile_view.dart';
+import 'package:cz2006/View/Report_Bite.dart';
+import 'package:cz2006/View/myMain.dart';
+import 'package:cz2006/controller/auth_servcie.dart';
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
@@ -8,6 +9,9 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 
 //logined in but not verified
 //https://pub.dev/packages/convex_bottom_bar/versions/2.0.0#custom-example
+
+
+const primaryColor=Colors.greenAccent;
 
 class HomePage extends StatefulWidget {
   AuthenticationServices auth;
@@ -23,18 +27,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _isEmailVerified = false;
-  int selectedpage = 3;
-  final _pageOption = [myHome(),myHome(),myHome(),myHome(),myHome()];
+  int selectedpage;
+  final _pageOption = [myHome(), ReportBite(), myHome(), myHome(), ProfileView()];
 
   @override
   void initState() {
     super.initState();
     _checkEmailVerification();
+    selectedpage = 3;
   }
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
     return new Scaffold(
       backgroundColor: Colors.white10,
       appBar: new AppBar(
