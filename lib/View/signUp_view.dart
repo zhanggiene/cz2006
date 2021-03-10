@@ -1,5 +1,6 @@
-
+import 'package:cz2006/controller/UserController.dart';
 import 'package:cz2006/controller/auth_servcie.dart';
+import 'package:cz2006/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:email_validator/email_validator.dart';
@@ -20,7 +21,6 @@ class _SignupViewState extends State<SignupView> {
   final formKey =
       GlobalKey<FormState>(); // the parent class can referenc the form object
   // FormState is the type
-  final AuthenticationServices _auth = AuthenticationServices();
   String _email, _password, _name;
   bool isLoading;
 
@@ -160,22 +160,27 @@ class _SignupViewState extends State<SignupView> {
 
     String userID = "";
     try {
-      userID = await widget._auth.signUp(_email, _password,_name);
-      widget._auth.sendEmailVerification().then((value) =>
-          Fluttertoast.showToast(
-              msg: "verification link  has been send to " + _email.toString(),
-              toastLength: Toast.LENGTH_SHORT,
-              gravity: ToastGravity.BOTTOM,
-              timeInSecForIosWeb: 3,
-              backgroundColor: primaryColor,
-              textColor: Colors.white,
-              fontSize: 16.0));
-      formKey.currentState.reset();
-      setState(() {
-        isLoading = false;
+      locator
+          .get<UserController>()
+          .signUp(_email, _password, _name)
+          .then((value) {
+        Fluttertoast.showToast(
+            msg: "verification link  has been send to " + _email.toString(),
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 3,
+            backgroundColor: primaryColor,
+            textColor: Colors.white,
+            fontSize: 16.0);
+
+        formKey.currentState.reset();
+        setState(() {
+          isLoading = false;
+        });
+        Navigator.pop(context);
       });
 
-      Navigator.pop(context);
+      
     } catch (e) {
       setState(() {
         isLoading = false;

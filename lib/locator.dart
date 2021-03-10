@@ -1,3 +1,4 @@
+import 'package:cz2006/controller/PostController.dart';
 import 'package:cz2006/controller/StorageRepo.dart';
 import 'package:cz2006/controller/UserController.dart';
 import 'package:cz2006/controller/auth_servcie.dart';
@@ -11,4 +12,5 @@ void setup() {
       () => AuthenticationServices());
   locator.registerLazySingleton<StorageService>(() => StorageService());
   locator.registerLazySingleton<UserController>(() => UserController());
+  locator.registerLazySingleton<PostController>(() => PostController());
 }

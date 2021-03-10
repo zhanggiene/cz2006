@@ -42,3 +42,8 @@ https://pub.dev/packages/modal_bottom_sheet
 https://www.youtube.com/watch?v=WjmQYqRW4zI&t=420s&ab_channel=MJSDCoding 
 
 
+flutter documentation:
+https://www.youtube.com/watch?v=UyYZR1LnqOg&ab_channel=RobertBrunhage 
+
+flutter pub global activate dartdoc 
+/Users/zhangzhuyan/Desktop/academic/CZ2006/project/cz2006/doc/api

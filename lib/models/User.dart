@@ -2,10 +2,11 @@ class User {
   String name;
   String UserId;
   String imageURL;
+  int coins;
+  bool isAdmin;
 
-  User(this.UserId,{this.name,this.imageURL});
+  User(this.UserId, {this.name, this.imageURL});
 
-  get getCurrentUserid => null;
   Map<String, dynamic> toJason() => {
         "name": name,
       };

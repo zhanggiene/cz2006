@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cz2006/controller/StorageRepo.dart';
 import 'package:cz2006/controller/auth_servcie.dart';
 import 'package:cz2006/models/User.dart';
@@ -10,6 +11,8 @@ class UserController {
   User _currentUser;
   AuthenticationServices _auth = locator.get<AuthenticationServices>();
   StorageService _storageService = locator.get<StorageService>();
+  final CollectionReference _coinsCollectionReference =
+      Firestore.instance.collection('users');
   Future init;
   Future<User> initUser() async {
     _currentUser = await _auth.getCurrentUser();
@@ -33,13 +36,30 @@ class UserController {
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
     _currentUser = await _auth.signIn(email, password);
+    DocumentSnapshot variable = await Firestore.instance
+        .collection('users')
+        .document(_currentUser.UserId)
+        .get();
     //_currentUser.imageURL = await downloadurl();
-    print("name is ");
-    print(_currentUser.name);
+    _currentUser.coins = variable.data['rewards'];
+  }
+
+  Future<void> signUp(String email, String password, String name) async {
+    String usid = await _auth.signUp(email, password, name);
+    await _coinsCollectionReference.document(usid).setData({"rewards": 0});
+
   }
 
   void updateName(String newName) {
     _currentUser.name = newName;
     _auth.updateName(newName);
   }
+
+  void updateCoins(String id, int changes) {
+
+    //must be admin to update other people's coin
+  }
+
+  
+
 }

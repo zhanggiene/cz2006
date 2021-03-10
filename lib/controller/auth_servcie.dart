@@ -10,23 +10,9 @@ class AuthenticationServices {
     return user.isEmailVerified;
   }
 
-  Future createNewUser(String email, String password) async {
-    try {
-      AuthResult result = await _auth.createUserWithEmailAndPassword(
-          email: email, password: password);
-      FirebaseUser user = result.user;
-      user.sendEmailVerification();
-      return user;
-    } catch (e) {
-      print(e.toString());
-    }
-  }
-
   Future<User> getCurrentUser() async {
     var firebaseUser = await _auth.currentUser();
-    return User(
-      firebaseUser?.uid,name: firebaseUser?.displayName
-    );
+    return User(firebaseUser?.uid, name: firebaseUser?.displayName);
   }
 
   Future<void> sendEmailVerification() async {
@@ -48,11 +34,13 @@ class AuthenticationServices {
     var user = (await _auth.createUserWithEmailAndPassword(
             email: email, password: password))
         .user;
+
     var userUpdateInfo = new UserUpdateInfo();
     userUpdateInfo.displayName = name;
     await user.updateProfile(userUpdateInfo);
     print("display name is");
     print(user.displayName);
+    await user.sendEmailVerification();
     user.reload();
 
     return user.uid;
