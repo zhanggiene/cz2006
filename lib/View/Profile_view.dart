@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:cz2006/View/coupon_redemption.dart';
 import 'package:cz2006/controller/UserController.dart';
 import 'package:cz2006/models/User.dart';
 import 'package:cz2006/widgets/ProfileImageWidget.dart';
@@ -9,6 +10,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 
 import '../locator.dart';
+import 'coupon_redemption.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({Key key}) : super(key: key);
@@ -21,12 +23,20 @@ class _ProfileViewState extends State<ProfileView> {
   User currentUser = locator.get<UserController>().currentuser;
   final NameController = TextEditingController();
   @override
-   @override
-  void initState() { 
+  @override
+  void initState() {
     super.initState();
-    NameController.text=currentUser.name;
-    
+    NameController.text = currentUser.name;
   }
+
+  void _showCouponPanel() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return CouponRedemptionView();
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -93,14 +103,14 @@ class _ProfileViewState extends State<ProfileView> {
                           )),
                     ),
                     Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           OutlineButton(
                               onPressed: () {},
                               padding: EdgeInsets.symmetric(horizontal: 50),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(20)),
-                              child: Text("CONCEL",
+                              child: Text("CANCEL",
                                   style: TextStyle(
                                       fontSize: 14,
                                       letterSpacing: 2.2,
@@ -110,9 +120,7 @@ class _ProfileViewState extends State<ProfileView> {
                               locator
                                   .get<UserController>()
                                   .updateName(NameController.text);
-                              setState(() {
-                                
-                              });
+                              setState(() {});
                             },
                             color: Colors.green,
                             child: Text(
@@ -122,11 +130,54 @@ class _ProfileViewState extends State<ProfileView> {
                                   letterSpacing: 2.2,
                                   color: Colors.white),
                             ),
-                            padding: EdgeInsets.symmetric(horizontal: 50),
+                            padding: EdgeInsets.symmetric(horizontal: 55),
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(20)),
                           ),
-                        ])
+                        ]),
+                    SizedBox(height: 20.0),
+                    Text("Rewards",
+                        style: TextStyle(
+                            fontSize: 25, fontWeight: FontWeight.w500)),
+                    SizedBox(height: 10.0),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        CircleAvatar(
+                            backgroundImage: AssetImage("assets/coins.png"),
+                            backgroundColor: Colors.yellow,
+                            radius: 15.0),
+                        Text(
+                          '${currentUser.coins ?? 120}',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(
+                          width: 70.0,
+                        ),
+                        RaisedButton(
+                          onPressed: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) {
+                              return CouponRedemptionView();
+                            }));
+                          },
+                          color: Colors.green,
+                          child: Text(
+                            "REDEEM",
+                            style: TextStyle(
+                                fontSize: 14,
+                                letterSpacing: 2.2,
+                                color: Colors.white),
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 43),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20)),
+                        ),
+                      ],
+                    )
                   ],
                 ))));
   } //build

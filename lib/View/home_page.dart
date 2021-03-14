@@ -12,8 +12,7 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 //logined in but not verified
 //https://pub.dev/packages/convex_bottom_bar/versions/2.0.0#custom-example
 
-
-const primaryColor=Colors.greenAccent;
+const primaryColor = Colors.greenAccent;
 
 class HomePage extends StatefulWidget {
   AuthenticationServices auth;
@@ -30,7 +29,13 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _isEmailVerified = false;
   int selectedpage;
-  final _pageOption = [ViewPost(), ReportBite(), myHome(), UploadPhotoPage(), ProfileView()];
+  final _pageOption = [
+    ViewPost(),
+    ReportBite(),
+    myHome(),
+    UploadPhotoPage(),
+    ProfileView()
+  ];
 
   @override
   void initState() {
