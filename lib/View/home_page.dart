@@ -30,7 +30,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _isEmailVerified = false;
   int selectedpage;
-  final _pageOption = [ViewPost(), ReportBite(), myHome(), UploadPhotoPage(), ProfileView()];
+  final _pageOption = [ViewPost(), ReportBite(), myHome(), ViewPost(), ProfileView()];
 
   @override
   void initState() {

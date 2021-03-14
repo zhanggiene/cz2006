@@ -47,7 +47,7 @@ class _ViewPostState extends State<ViewPost> {
                 return InkWell(
                     child: ListTile(
                         leading: Image.network(
-                          posts[index].image,
+                          "https://guardiandigital.com/images/url-defense.png",
                           width: 120,
                           fit: BoxFit.fitWidth,
                         ),
@@ -79,7 +79,7 @@ class _ViewPostState extends State<ViewPost> {
   );
 
       },
-      child: Icon(Icons.navigation),
+      child: Icon(Icons.add),
       backgroundColor: Colors.green,
     )
     );

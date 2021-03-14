@@ -47,7 +47,6 @@ class UserController {
   Future<void> signUp(String email, String password, String name) async {
     String usid = await _auth.signUp(email, password, name);
     await _coinsCollectionReference.document(usid).setData({"rewards": 0});
-
   }
 
   void updateName(String newName) {
@@ -55,11 +54,21 @@ class UserController {
     _auth.updateName(newName);
   }
 
-  void updateCoins(String id, int changes) {
-
-    //must be admin to update other people's coin
+  Future<void> updateCoins(int changes) async {
+    DocumentSnapshot variable = await Firestore.instance
+        .collection('users')
+        .document(_currentUser.UserId)
+        .get();
+    print("user reward is" + variable.data['rewards'].toString());
+    variable.data['rewards'] = variable.data['rewards'] + changes;
+    _currentUser.coins = variable.data['rewards'];
   }
 
-  
-
+  Future<int> getCoins() async {
+    DocumentSnapshot variable = await Firestore.instance
+        .collection('users')
+        .document(_currentUser.UserId)
+        .get();
+    return variable.data['rewards'];
+  }
 }

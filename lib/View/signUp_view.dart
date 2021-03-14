@@ -32,14 +32,14 @@ class _SignupViewState extends State<SignupView> {
     final _height = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
-        title: Text("sign up"),
+        title: Text("Sign Up"),
       ),
       body: SingleChildScrollView(
         child: Stack(children: [
           Container(
               child: Column(children: [
             SizedBox(height: _height * 0.05), // no child, just to add gap
-            AutoSizeText("Welcome",
+            AutoSizeText("Welcome!",
                 maxLines: 1,
                 textAlign: TextAlign.center,
                 style: TextStyle(

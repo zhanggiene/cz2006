@@ -91,8 +91,8 @@ class CustomUI extends StatelessWidget {
 
 final List<OnBoardModel> onBoardData = [
   OnBoardModel(
-    title: "Set your own goals and get better",
-    description: "Goal support your motivation and inspire you to work harder",
+    title: "Join the community",
+    description: "Fight dengue together",
     imgUrl: "images/Intro1.png",
   ),
   OnBoardModel(

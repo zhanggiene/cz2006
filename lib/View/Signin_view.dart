@@ -39,9 +39,6 @@ class _SignupViewState extends State<SigninView> {
     final _width = MediaQuery.of(context).size.height;
     final _height = MediaQuery.of(context).size.height;
     return new Scaffold(
-        appBar: AppBar(
-          title: Text('Firebase Auth'),
-        ),
         body: SingleChildScrollView(
           child: Stack(children: <Widget>[
             Container(
@@ -49,16 +46,26 @@ class _SignupViewState extends State<SigninView> {
               height: _height,
               width: _width,
               child: Column(
+
+
                 children: [
-                  SizedBox(height: _height * 0.05), // no child, just to add gap
-                  AutoSizeText("Welcome back!",
+                                  Padding(
+                                    padding: const EdgeInsets.only(left:40.0,right:40,top: 100),
+                                    child: Row(
+  children: [
+    Image.asset('images/logo.png'),
+    AutoSizeText("mosQUITo",
                       maxLines: 1,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        fontSize: 35,
-                        color: Colors.white,
+                        fontSize: 30,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold
                       )),
-                  SizedBox(height: _height * 0.05),
+  ],
+),
+                                  ),
+                  SizedBox(height: _height * 0.01), // no child, just to add gap
                   Padding(
                     padding: const EdgeInsets.all(20),
                     child: Form(

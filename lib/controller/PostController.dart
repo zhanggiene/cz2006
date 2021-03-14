@@ -20,9 +20,10 @@ class PostController {
   }
   Post get post => _post;
 
-  Future<void> uploadPost(File image) async {
-    _post.image = await _storageService.uploadPostImage(image);
-    print(_post.image);
+  Future<void> uploadPosts(List<File> images) async {
+    for (var i = 0; i < images.length; i++) {
+      _post.images.add(await _storageService.uploadPostImage(images[i]));
+    }
     //var id = _database.child("posts/").push(); // one user can create two post
     //print(_post.toJson());
     //id.set(_post.toJson());
@@ -45,11 +46,14 @@ class PostController {
   }
 
   void deletePost(Post post) {
-    if (post.image != null) {
-      _storageService.deleteURL(post.image);
+    if (post.images != null) {
+      for (var i = 0; i < post.images.length; i++) {
+        _storageService.deleteURL(post.images[i]);
+    }
     }
     _postsCollectionReference.document(post.id).delete();
     //postDeleted(post); // call back function.
   }
-  getPostBytime(){}
+
+  getPostBytime() {}
 }
