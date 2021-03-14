@@ -1,4 +1,4 @@
-/*import 'package:cz2006/controller/auth_servcie.dart';
+import 'package:cz2006/controller/auth_servcie.dart';
 import 'package:cz2006/controller/rootPage.dart';
 import 'package:cz2006/locator.dart';
 import 'package:flutter/material.dart';
@@ -34,8 +34,7 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-*/
+/*
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_place_picker/google_maps_place_picker.dart';
@@ -171,3 +170,5 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 }
+
+*/
