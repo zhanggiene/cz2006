@@ -1,12 +1,18 @@
+import 'package:cz2006/View/onBoard_screen.dart';
 import 'package:cz2006/controller/auth_servcie.dart';
 import 'package:cz2006/controller/rootPage.dart';
 import 'package:cz2006/locator.dart';
 import 'package:flutter/material.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 //check if already login, if login then go homepage, if not show login/signup page
 
-void main() {
+int init;
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences preferences = await SharedPreferences.getInstance();
+  init = await preferences.getInt('init');
+  await preferences.setInt('init', 1);
+  print("se to 1");
   setup();
   runApp(MyApp());
 }
@@ -30,7 +36,12 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.green,
       ),
-      home: new RootPage(auth: new AuthenticationServices()),
+      //home: new RootPage(auth: new AuthenticationServices()),
+      initialRoute: init == 0 || init == null ? 'onBoard' : 'home',
+      routes: {
+        'home': (context) => new RootPage(auth: new AuthenticationServices()),
+        'onBoard': (context) => OnBoardScreen(),
+      },
     );
   }
 }
