@@ -91,40 +91,47 @@ class _UploadPhotoPageState extends State<UploadPhotoPage> {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
                   //locator
-                  locator.get<PostController>().uploadPosts(fileImageArray);
-                  locator.get<UserController>().updateCoins(10).then((value) =>
-                      {
-                        AwesomeDialog(
-                            context: context,
-                            animType: AnimType.LEFTSLIDE,
-                            headerAnimationLoop: false,
-                            dialogType: DialogType.SUCCES,
-                            body: Center(
-                                child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  'You have made a post!',
-                                  style: TextStyle(
-                                      fontSize: 26.0,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                Text(
-                                  'You have earned 10 points',
-                                  style: TextStyle(fontStyle: FontStyle.italic),
-                                ),
-                              ],
-                            )),
-                            btnOkOnPress: () {
-                              debugPrint('OnClcik');
-                              Navigator.pop(context);
-                            },
-                            btnOkIcon: Icons.check_circle,
-                            onDissmissCallback: () {
-                              debugPrint('Dialog Dissmiss from callback');
-                            })
-                          ..show()
-                      });
+                  locator
+                      .get<PostController>()
+                      .uploadPosts(fileImageArray)
+                      .then((value) => locator
+                          .get<UserController>()
+                          .updateCoins(10)
+                          .then((value) => {
+                                AwesomeDialog(
+                                    context: context,
+                                    animType: AnimType.LEFTSLIDE,
+                                    headerAnimationLoop: false,
+                                    dialogType: DialogType.SUCCES,
+                                    body: Center(
+                                        child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceEvenly,
+                                      children: [
+                                        Text(
+                                          'You have made a post!',
+                                          style: TextStyle(
+                                              fontSize: 26.0,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                        Text(
+                                          'You have earned 10 points',
+                                          style: TextStyle(
+                                              fontStyle: FontStyle.italic),
+                                        ),
+                                      ],
+                                    )),
+                                    btnOkOnPress: () {
+                                      debugPrint('OnClcik');
+                                      Navigator.pop(context);
+                                    },
+                                    btnOkIcon: Icons.check_circle,
+                                    onDissmissCallback: () {
+                                      debugPrint(
+                                          'Dialog Dissmiss from callback');
+                                    })
+                                  ..show()
+                              }));
                 }
               },
               child: new Text("Post"),
@@ -136,7 +143,7 @@ class _UploadPhotoPageState extends State<UploadPhotoPage> {
   }
 
   Future<void> pickImages() async {
-List<Asset> resultList = <Asset>[];
+    List<Asset> resultList = <Asset>[];
 
     try {
       resultList = await MultiImagePicker.pickImages(

@@ -55,13 +55,10 @@ class UserController {
   }
 
   Future<void> updateCoins(int changes) async {
-    DocumentSnapshot variable = await Firestore.instance
-        .collection('users')
-        .document(_currentUser.UserId)
-        .get();
-    print("user reward is" + variable.data['rewards'].toString());
-    variable.data['rewards'] = variable.data['rewards'] + changes;
-    _currentUser.coins = variable.data['rewards'];
+    var variable =
+        Firestore.instance.collection('users').document(_currentUser.UserId);
+    variable.updateData({"rewards": FieldValue.increment(changes)});
+    _currentUser.coins = _currentUser.coins + changes;
   }
 
   Future<int> getCoins() async {

@@ -21,14 +21,15 @@ class _ProfileViewState extends State<ProfileView> {
   User currentUser = locator.get<UserController>().currentuser;
   final NameController = TextEditingController();
   @override
-   @override
-  void initState() { 
+  @override
+  void initState() {
     super.initState();
-    NameController.text=currentUser.name;
-    
+    NameController.text = currentUser.name;
   }
+
   @override
   Widget build(BuildContext context) {
+    print(currentUser.coins);
     return Scaffold(
         appBar: AppBar(
           title: const Text('Profile'),
@@ -110,9 +111,7 @@ class _ProfileViewState extends State<ProfileView> {
                               locator
                                   .get<UserController>()
                                   .updateName(NameController.text);
-                              setState(() {
-                                
-                              });
+                              setState(() {});
                             },
                             color: Colors.green,
                             child: Text(
