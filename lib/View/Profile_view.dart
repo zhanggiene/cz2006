@@ -32,11 +32,11 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     User user;
-    Future<void> retreiveUserRewards() async {
-      user= locator.get<UserController>().currentuser;
+    Future<void> getCurrentUser() async {
+      user = locator.get<UserController>().currentuser;
     }
 
-    retreiveUserRewards();
+    getCurrentUser();
 
     return Scaffold(
         appBar: AppBar(
