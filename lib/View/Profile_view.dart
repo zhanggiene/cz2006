@@ -86,6 +86,7 @@ class _ProfileViewState extends State<ProfileView> {
                       },
                     ),
                     SizedBox(height: 35),
+                    if(currentUser.isAdmin) Text("i am admin"),
                     TextField(
                       controller: NameController,
                       decoration: InputDecoration(

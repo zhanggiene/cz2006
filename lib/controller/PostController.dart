@@ -56,5 +56,15 @@ class PostController {
     //postDeleted(post); // call back function.
   }
 
-  getPostBytime() {}
+  Future<List<Post>> getPostByTime() async {
+    QuerySnapshot snapshot = await _postsCollectionReference.getDocuments();
+    List<Post> postList = [];
+    snapshot.documents.forEach((document) {
+      Post post = Post.fromMap(document.data);
+      postList.add(post);
+    });
+    print("sorting post in chrononogical order");
+    postList.sort((a, b) => a.timeOfCreation.compareTo(b.timeOfCreation));
+    return postList;
+  }
 }

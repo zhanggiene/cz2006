@@ -4,6 +4,7 @@ import 'package:cz2006/controller/PostController.dart';
 import 'package:cz2006/locator.dart';
 import 'package:cz2006/models/Post.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ViewPost extends StatefulWidget {
   ViewPost({Key key}) : super(key: key);
@@ -24,7 +25,7 @@ class _ViewPostState extends State<ViewPost> {
 
   getdata() async {
     print("to get all posts");
-    locator.get<PostController>().getAllPosts().then((value) {
+    locator.get<PostController>().getPostByTime().then((value) {
       posts = value;
       setState(() {
         loading = false;
@@ -54,7 +55,8 @@ class _ViewPostState extends State<ViewPost> {
                           width: 120,
                           fit: BoxFit.fitWidth,
                         ),
-                        title: Text(posts[index].content)),
+                        title: Text(posts[index].content),
+                        subtitle: Text(DateFormat('yyyy-MM-dd').format(DateTime.fromMicrosecondsSinceEpoch(posts[index].timeOfCreation))),),
                     onTap: () {
                       print(posts[index].id);
                       Navigator.push(

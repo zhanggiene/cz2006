@@ -42,11 +42,16 @@ class UserController {
         .get();
     //_currentUser.imageURL = await downloadurl();
     _currentUser.coins = variable.data['rewards'];
+    _currentUser.isAdmin=variable.data['isAdmin'];
   }
 
-  Future<void> signUp(String email, String password, String name) async {
+  Future<void> signUp(
+      String email, String password, String name, bool isAdmin) async {
     String usid = await _auth.signUp(email, password, name);
-    await _coinsCollectionReference.document(usid).setData({"rewards": 0});
+    await _coinsCollectionReference
+        .document(usid)
+        .setData({"rewards": 0, "isAdmin": isAdmin});
+    _currentUser.isAdmin = isAdmin;
   }
 
   void updateName(String newName) {

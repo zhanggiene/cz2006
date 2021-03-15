@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.green,
       ),
       //home: new RootPage(auth: new AuthenticationServices()),
-      initialRoute: init == 0 || init == null ? 'onBoard' : 'home',
+      initialRoute: init == 1 || init == null ? 'onBoard' : 'home',
       routes: {
         'home': (context) => new RootPage(auth: new AuthenticationServices()),
         'onBoard': (context) => OnBoardScreen(),

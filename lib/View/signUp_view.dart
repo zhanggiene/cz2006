@@ -22,7 +22,8 @@ class _SignupViewState extends State<SignupView> {
       GlobalKey<FormState>(); // the parent class can referenc the form object
   // FormState is the type
   String _email, _password, _name;
-  bool isLoading;
+
+  bool isLoading, isAdmin;
 
   void initState() {
     isLoading = false;
@@ -120,6 +121,20 @@ class _SignupViewState extends State<SignupView> {
                           _name = val;
                         },
                       ),
+                      TextFormField(
+                        style: TextStyle(fontSize: 15.0),
+                        decoration: buildSignUpInputDecoration(
+                            "Admin Code", "Ingore if you are not Admin"),
+                        onSaved:
+                            (val) // will be actiavted by key.currentstate.save()
+                            {
+                          if (val == "CZ2006A1") {
+                            isAdmin = true;
+                          } else {
+                            isAdmin = false;
+                          }
+                        },
+                      ),
                       SizedBox(height: _height * 0.07),
                       RaisedButton(
                         shape: RoundedRectangleBorder(
@@ -162,7 +177,7 @@ class _SignupViewState extends State<SignupView> {
     try {
       locator
           .get<UserController>()
-          .signUp(_email, _password, _name)
+          .signUp(_email, _password, _name,isAdmin)
           .then((value) {
         Fluttertoast.showToast(
             msg: "verification link  has been send to " + _email.toString(),
@@ -179,8 +194,6 @@ class _SignupViewState extends State<SignupView> {
         });
         Navigator.pop(context);
       });
-
-      
     } catch (e) {
       setState(() {
         isLoading = false;
