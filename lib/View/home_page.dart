@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
     ViewPost(),
     ReportBite(),
     myHome(),
-    UploadPhotoPage(),
+    ViewPost(),
     ProfileView()
   ];
 

@@ -29,16 +29,9 @@ class _ProfileViewState extends State<ProfileView> {
     NameController.text = currentUser.name;
   }
 
-  void _showCouponPanel() {
-    showModalBottomSheet(
-        context: context,
-        builder: (context) {
-          return CouponRedemptionView();
-        });
-  }
-
   @override
   Widget build(BuildContext context) {
+    print(currentUser.coins);
     return Scaffold(
         appBar: AppBar(
           title: const Text('Profile'),
@@ -144,11 +137,11 @@ class _ProfileViewState extends State<ProfileView> {
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         CircleAvatar(
-                            backgroundImage: AssetImage("assets/coins.png"),
+                            backgroundImage: AssetImage("images/coins.png"),
                             backgroundColor: Colors.yellow,
                             radius: 15.0),
                         Text(
-                          '${currentUser.coins ?? 120}',
+                          '${currentUser.coins ?? 1234}',
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.black,

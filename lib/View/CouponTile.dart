@@ -31,7 +31,7 @@ class CouponTile extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   CircleAvatar(
-                      backgroundImage: AssetImage("assets/coins.png"),
+                      backgroundImage: AssetImage("images/coins.png"),
                       backgroundColor: Colors.yellow,
                       radius: 15.0),
                   SizedBox(width: 5.0),
