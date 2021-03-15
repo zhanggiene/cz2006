@@ -90,6 +90,7 @@ class _UploadPhotoPageState extends State<UploadPhotoPage> {
               onPressed: () {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
+                  _post.userID = currentUser.UserId;
                   //locator
                   locator
                       .get<PostController>()

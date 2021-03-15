@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'dart:convert';
+import 'dart:core';
 
 class Post {
   /// this is the documentation
@@ -11,6 +12,7 @@ class Post {
   double xCoordinate;
   double yCoordinate;
   List<String> images = [];
+  int timeOfCreation;
 
   Post() {
     print("post is created");
@@ -23,6 +25,8 @@ class Post {
       'content': this.content,
       'image': jsonEncode(this.images),
       'id': this.id,
+      'userID': this.userID,
+      'time': DateTime.now().microsecondsSinceEpoch
     };
   }
 
@@ -32,5 +36,7 @@ class Post {
     print(data['image']);
     images = (jsonDecode(data['image']) as List<dynamic>).cast<String>();
     id = data['id'];
+    userID = data['userID'];
+    timeOfCreation = data['time'];
   }
 }

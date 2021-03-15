@@ -31,13 +31,12 @@ class _ProfileViewState extends State<ProfileView> {
 
   @override
   Widget build(BuildContext context) {
-    int userRewards;
+    User user;
     Future<void> retreiveUserRewards() async {
-      userRewards = await locator.get<UserController>().getCoins();
+      user= locator.get<UserController>().currentuser;
     }
 
     retreiveUserRewards();
-    print('$userRewards');
 
     return Scaffold(
         appBar: AppBar(
@@ -148,7 +147,7 @@ class _ProfileViewState extends State<ProfileView> {
                             backgroundColor: Colors.yellow,
                             radius: 15.0),
                         Text(
-                          '$userRewards',
+                          user.coins.toString(),
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.black,

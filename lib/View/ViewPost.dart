@@ -47,7 +47,10 @@ class _ViewPostState extends State<ViewPost> {
                 return InkWell(
                     child: ListTile(
                         leading: Image.network(
-                          "https://guardiandigital.com/images/url-defense.png",
+                          //"https://guardiandigital.com/images/url-defense.png",
+                          posts[index].images[0],
+                          //await _storageService.getUserProfileImage(currentuser.UserId)
+                          //posts[index].
                           width: 120,
                           fit: BoxFit.fitWidth,
                         ),
