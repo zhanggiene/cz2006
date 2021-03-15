@@ -2,15 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cz2006/controller/UserController.dart';
 import 'package:cz2006/locator.dart';
 import 'package:cz2006/models/Coupon.dart';
-import 'package:cz2006/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CouponTile extends StatelessWidget {
   final Coupon coupon;
   CouponTile({this.coupon});
-
-  User currentUser = locator.get<UserController>().currentuser;
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +49,12 @@ class CouponTile extends StatelessWidget {
                               },
                               child: Text("Cancel")),
                           FlatButton(
-                              onPressed: () {
-                                // if (currentUser.coins >= coupon.couponValue) {
-                                if (true) {
-                                  print(currentUser.coins);
+                              onPressed: () async {
+                                int userRewards = await locator
+                                    .get<UserController>()
+                                    .getCoins();
+                                if (userRewards >= coupon.couponValue) {
+                                  print("user coins: $userRewards -> redeem");
                                   Navigator.of(context).pop();
                                   showDialog(
                                       context: context,
