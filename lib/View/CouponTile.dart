@@ -22,7 +22,7 @@ class CouponTile extends StatelessWidget {
               ),
               title: Text(coupon.title,
                   style: TextStyle(
-                    fontSize: 14.0,
+                    fontSize: 15.0,
                   )),
               trailing: Row(
                 mainAxisSize: MainAxisSize.min,
