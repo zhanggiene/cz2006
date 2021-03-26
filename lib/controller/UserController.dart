@@ -42,7 +42,7 @@ class UserController {
         .get();
     //_currentUser.imageURL = await downloadurl();
     _currentUser.coins = variable.data['rewards'];
-    _currentUser.isAdmin=variable.data['isAdmin'];
+    _currentUser.isAdmin = variable.data['isAdmin'];
   }
 
   Future<void> signUp(
@@ -60,10 +60,11 @@ class UserController {
   }
 
   Future<void> updateCoins(int changes) async {
+    User currentUser = locator.get<UserController>().currentuser;
     var variable =
-        Firestore.instance.collection('users').document(_currentUser.UserId);
+        Firestore.instance.collection('users').document(currentUser.UserId);
     variable.updateData({"rewards": FieldValue.increment(changes)});
-    _currentUser.coins = _currentUser.coins + changes;
+    currentUser.coins = currentUser.coins + changes;
   }
 
   Future<int> getCoins() async {
@@ -72,5 +73,10 @@ class UserController {
         .document(_currentUser.UserId)
         .get();
     return variable.data['rewards'];
+  }
+
+  Stream<DocumentSnapshot> get userSnapshot {
+    User currentUser = locator.get<UserController>().currentuser;
+    return _coinsCollectionReference.document(currentUser.UserId).snapshots();
   }
 }

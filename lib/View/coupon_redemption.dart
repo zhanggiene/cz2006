@@ -8,6 +8,7 @@ import 'package:cz2006/models/Coupon.dart';
 import 'package:provider/provider.dart';
 
 import '../locator.dart';
+import 'UserRewardsText.dart';
 
 class CouponRedemptionView extends StatefulWidget {
   // int userRewards;
@@ -55,12 +56,9 @@ class _CouponRedemptionViewState extends State<CouponRedemptionView> {
                       backgroundColor: Colors.yellow,
                       radius: 14.0),
                   SizedBox(width: 5.0),
-                  Text(
-                    user.coins.toString(),
-                    style: TextStyle(
-                      fontSize: 18,
-                      color: Colors.black,
-                    ),
+                  StreamProvider<DocumentSnapshot>.value(
+                    value: UserController().userSnapshot,
+                    child: UserRewardsText(),
                   ),
                 ],
               ),

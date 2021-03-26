@@ -55,6 +55,8 @@ class CouponTile extends StatelessWidget {
                                     .getCoins();
                                 if (userRewards >= coupon.couponValue) {
                                   print("user coins: $userRewards -> redeem");
+                                  UserController()
+                                      .updateCoins(-coupon.couponValue);
                                   Navigator.of(context).pop();
                                   showDialog(
                                       context: context,
@@ -134,17 +136,11 @@ class CouponTile extends StatelessWidget {
 }
 
 class CouponList extends StatefulWidget {
-  int userRewards;
-  CouponList({this.userRewards});
   @override
-  _CouponListState createState() => _CouponListState(userRewards);
+  _CouponListState createState() => _CouponListState();
 }
 
 class _CouponListState extends State<CouponList> {
-  int userRewards;
-  _CouponListState(userRewards) {
-    this.userRewards = userRewards;
-  }
   @override
   Widget build(BuildContext context) {
     final coupons = Provider.of<List<Coupon>>(context);

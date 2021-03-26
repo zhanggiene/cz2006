@@ -32,8 +32,10 @@ class _ProfileViewState extends State<ProfileView> {
   @override
   Widget build(BuildContext context) {
     User user;
+    String userRewards;
     Future<void> getCurrentUser() async {
       user = locator.get<UserController>().currentuser;
+      userRewards = user.coins.toString();
     }
 
     getCurrentUser();
@@ -86,7 +88,7 @@ class _ProfileViewState extends State<ProfileView> {
                       },
                     ),
                     SizedBox(height: 35),
-                    if(currentUser.isAdmin) Text("i am admin"),
+                    if (currentUser.isAdmin) Text("I am admin"),
                     TextField(
                       controller: NameController,
                       decoration: InputDecoration(
@@ -148,7 +150,7 @@ class _ProfileViewState extends State<ProfileView> {
                             backgroundColor: Colors.yellow,
                             radius: 15.0),
                         Text(
-                          user.coins.toString(),
+                          userRewards,
                           style: TextStyle(
                             fontSize: 20,
                             color: Colors.black,
@@ -162,7 +164,9 @@ class _ProfileViewState extends State<ProfileView> {
                             Navigator.push(context,
                                 MaterialPageRoute(builder: (context) {
                               return CouponRedemptionView();
-                            }));
+                            })).then((value) => setState(() {
+                                  getCurrentUser();
+                                }));
                           },
                           color: Colors.green,
                           child: Text(
