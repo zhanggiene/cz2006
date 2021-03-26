@@ -2,6 +2,9 @@ import 'dart:io';
 import 'dart:convert';
 import 'dart:core';
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Post {
   /// this is the documentation
   String userID;
@@ -13,10 +16,20 @@ class Post {
   double yCoordinate;
   List<String> images = [];
   int timeOfCreation;
+  LatLng location;
 
   Post() {
+    userID = "";
+    id = "";
+    content = "";
+    title = "";
+    xCoordinate = 0;
+    yCoordinate = 0;
+
+
     print("post is created");
     images = [];
+    
   }
 
   Map<String, dynamic> toJson() {
@@ -26,7 +39,8 @@ class Post {
       'image': jsonEncode(this.images),
       'id': this.id,
       'userID': this.userID,
-      'time': DateTime.now().microsecondsSinceEpoch
+      'time': DateTime.now().microsecondsSinceEpoch,
+      'location': GeoPoint(location.latitude, location.longitude)
     };
   }
 
@@ -38,5 +52,7 @@ class Post {
     id = data['id'];
     userID = data['userID'];
     timeOfCreation = data['time'];
+    location =
+        new LatLng(data['location'].latitude, data['location'].longitude);
   }
 }

@@ -24,10 +24,6 @@ class _DetailState extends State<Detail> {
   
 
   Completer<GoogleMapController> _controller = Completer();
-  static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(1.35, 110),
-    zoom: 1.4746,
-  );
 
   @override
   Widget build(BuildContext context) {
@@ -122,13 +118,16 @@ class _DetailState extends State<Detail> {
                 child: GoogleMap(
                   mapType: MapType.normal,
                   markers: _markers,
-                  initialCameraPosition: _kGooglePlex,
+                  initialCameraPosition: CameraPosition(
+    target: LatLng(widget.post.location.latitude, widget.post.location.longitude),
+    zoom: 30,
+  ),
                   onMapCreated: (GoogleMapController controller) {
                     _controller.complete(controller);
                     setState(() {
                       _markers.add(Marker(
                         markerId: MarkerId("tamarind"),
-                        position: LatLng(1.35, 103.6845),
+                        position: LatLng(widget.post.location.latitude, widget.post.location.longitude),
                       ));
                     });
                   },

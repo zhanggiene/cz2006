@@ -3,9 +3,26 @@
 
 # todo redo the design 
 
+animated icon mosquito 
+
+https://www.youtube.com/watch?v=NZRocXb7qwU&ab_channel=RajaYogan
+
+https://stackoverflow.com/questions/54906111/how-to-add-a-bottom-sheet-after-tapping-a-google-map-marker-in-flutter
+
+https://stackoverflow.com/questions/54277216/bring-modal-bottom-sheet-on-clicking-a-google-map-marker 
+
+https://pub.dev/packages/expandable_bottom_sheet 
+
+
 https://www.renderforest.com/template/Mobile-App-Toolkit 
 
 https://pub.flutter-io.cn/packages/carousel_slider
+
+https://stackoverflow.com/questions/55987785/adding-markers-dynamically-to-flutter-google-map
+
+https://rrtutors.com/tutorials/Show-Multiple-Markers-on-Google-Maps-Flutter 
+
+https://www.youtube.com/watch?v=0048xewPoxo&t=41s&ab_channel=PradipDebnath 
 
 1. readhttps://flutter.dev/docs/get-started/test-drive?tab=vscode and setup the environment test the sample code
 default mobile device pixel 3 API 27

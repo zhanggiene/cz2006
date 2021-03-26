@@ -12,8 +12,11 @@ import 'package:flutter_absolute_path/flutter_absolute_path.dart';
 
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'dart:async';
+import 'package:google_maps_place_picker/google_maps_place_picker.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class UploadPhotoPage extends StatefulWidget {
+  static final kInitialPosition = LatLng(-33.8567844, 151.213108);
   @override
   _UploadPhotoPageState createState() => _UploadPhotoPageState();
 }
@@ -21,13 +24,25 @@ class UploadPhotoPage extends StatefulWidget {
 class _UploadPhotoPageState extends State<UploadPhotoPage> {
   //PickedFile imageFile;
   // ignore: deprecated_member_use
+  PickResult selectedPlace;
   List<Asset> images = List<Asset>();
   List<File> fileImageArray = [];
+  AnimationController _animationController;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   Post _post = locator.get<PostController>().post;
   User currentUser = locator.get<UserController>().currentuser;
   //Post _post = new Post();
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,6 +73,72 @@ class _UploadPhotoPageState extends State<UploadPhotoPage> {
                 }),
               ),
             ),
+            RaisedButton(
+              child: Text("Load Google Map"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return PlacePicker(
+                        apiKey: "AIzaSyCVNX_dr0ebA4zmzokVUxcizwN1NRdifcI",
+                        initialPosition: LatLng(1.3521, 103.8198),
+                        useCurrentLocation: true,
+                        selectInitialPosition: true,
+                        enableMyLocationButton: true,
+                        forceAndroidLocationManager: true,
+
+                        //usePlaceDetailSearch: true,
+                        onPlacePicked: (result) {
+                          selectedPlace = result;
+                          Navigator.of(context).pop();
+                          setState(() {});
+                        },
+
+                        //forceSearchOnZoomChanged: true,
+                        //automaticallyImplyAppBarLeading: false,
+                        //autocompleteLanguage: "ko",
+                        //region: 'au',
+                        //selectInitialPosition: true,
+                        // selectedPlaceWidgetBuilder: (_, selectedPlace, state, isSearchBarFocused) {
+                        //   print("state: $state, isSearchBarFocused: $isSearchBarFocused");
+                        //   return isSearchBarFocused
+                        //       ? Container()
+                        //       : FloatingCard(
+                        //           bottomPosition: 0.0, // MediaQuery.of(context) will cause rebuild. See MediaQuery document for the information.
+                        //           leftPosition: 0.0,
+                        //           rightPosition: 0.0,
+                        //           width: 500,
+                        //           borderRadius: BorderRadius.circular(12.0),
+                        //           child: state == SearchingState.Searching
+                        //               ? Center(child: CircularProgressIndicator())
+                        //               : RaisedButton(
+                        //                   child: Text("Pick Here"),
+                        //                   onPressed: () {
+                        //                     // IMPORTANT: You MUST manage selectedPlace data yourself as using this build will not invoke onPlacePicker as
+                        //                     //            this will override default 'Select here' Button.
+                        //                     print("do something with [selectedPlace] data");
+                        //                     Navigator.of(context).pop();
+                        //                   },
+                        //                 ),
+                        //         );
+                        // },
+                        // pinBuilder: (context, state) {
+                        //   if (state == PinState.Idle) {
+                        //     return Icon(Icons.favorite_border);
+                        //   } else {
+                        //     return Icon(Icons.favorite);
+                        //   }
+                        // },
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
+            selectedPlace == null
+                ? Container()
+                : Text(selectedPlace.formattedAddress ?? ""),
             TextFormField(
                 decoration: InputDecoration(labelText: "Title"),
                 keyboardType: TextInputType.text,
@@ -91,7 +172,9 @@ class _UploadPhotoPageState extends State<UploadPhotoPage> {
                 if (_formKey.currentState.validate()) {
                   _formKey.currentState.save();
                   _post.userID = currentUser.UserId;
-                  //locator
+                  _post.location = new LatLng(selectedPlace.geometry.location.lat,selectedPlace.geometry.location.lng);
+                  // upload post 
+                   //locator
                   locator
                       .get<PostController>()
                       .uploadPosts(fileImageArray)
