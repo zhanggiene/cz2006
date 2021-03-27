@@ -41,7 +41,7 @@ class Post {
       'title': this.title,
       'content': this.content,
       'image': jsonEncode(this.images),
-      'likedBy': jsonEncode(this.content),
+      'likedBy': jsonEncode(this.likedBy),
       'id': this.id,
       'userID': this.userID,
       'time': DateTime.now().microsecondsSinceEpoch,
