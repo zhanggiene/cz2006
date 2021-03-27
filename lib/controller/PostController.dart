@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cz2006/controller/StorageRepo.dart';
 import 'package:cz2006/controller/auth_servcie.dart';
 import 'package:cz2006/models/Post.dart';
+import 'package:cz2006/models/User.dart';
 
 import '../locator.dart';
 
@@ -54,6 +55,13 @@ class PostController {
     }
     _postsCollectionReference.document(post.id).delete();
     //postDeleted(post); // call back function.
+  }
+
+  void likePost(User a, Post post) {
+    post.addLikedUserId(a.UserId);
+    _postsCollectionReference.document(post.id).updateData(post.toJson());
+    var variable = Firestore.instance.collection('users').document(a.UserId);
+    variable.updateData({"likedNum": FieldValue.increment(1)});
   }
 
   Future<List<Post>> getPostByTime() async {

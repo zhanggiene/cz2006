@@ -17,6 +17,7 @@ class Post {
   List<String> images = [];
   int timeOfCreation;
   LatLng location;
+  List<String> likedBy = [];
 
   Post() {
     userID = "";
@@ -26,10 +27,13 @@ class Post {
     xCoordinate = 0;
     yCoordinate = 0;
 
-
     print("post is created");
     images = [];
-    
+    likedBy = [];
+  }
+
+  void addLikedUserId(String userID) {
+    likedBy.add(userID);
   }
 
   Map<String, dynamic> toJson() {
@@ -37,6 +41,7 @@ class Post {
       'title': this.title,
       'content': this.content,
       'image': jsonEncode(this.images),
+      'likedBy': jsonEncode(this.content),
       'id': this.id,
       'userID': this.userID,
       'time': DateTime.now().microsecondsSinceEpoch,
@@ -47,8 +52,8 @@ class Post {
   Post.fromMap(Map<String, dynamic> data) {
     title = data['title'];
     content = data['content'];
-    print(data['image']);
     images = (jsonDecode(data['image']) as List<dynamic>).cast<String>();
+
     id = data['id'];
     userID = data['userID'];
     timeOfCreation = data['time'];
