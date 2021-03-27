@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:cz2006/View/InputDecoration.dart';
 import 'package:cz2006/View/coupon_redemption.dart';
 import 'package:cz2006/controller/UserController.dart';
 import 'package:cz2006/models/User.dart';
@@ -42,7 +43,7 @@ class _ProfileViewState extends State<ProfileView> {
 
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Profile'),
+          title: currentUser.isAdmin ? Text('Admin') : Text('Profile'),
         ),
         body: Container(
             padding: EdgeInsets.only(left: 16, top: 25, right: 16),
@@ -58,7 +59,7 @@ class _ProfileViewState extends State<ProfileView> {
                     SizedBox(
                       height: 15,
                     ),
-                    Text(currentUser.name),
+                    // Text(currentUser.name),
                     TextButton(
                         child: Text("EDIT"),
                         style: TextButton.styleFrom(
@@ -88,21 +89,30 @@ class _ProfileViewState extends State<ProfileView> {
                       },
                     ),
                     SizedBox(height: 35),
-                    if (currentUser.isAdmin) Text("I am admin"),
+                    // if (currentUser.isAdmin) Text("I am admin"),
                     TextField(
                       controller: NameController,
-                      decoration: InputDecoration(
-                          contentPadding: EdgeInsets.only(bottom: 3),
-                          labelText: "full name",
-                          floatingLabelBehavior: FloatingLabelBehavior.always,
-                          errorText: NameController.text.isNotEmpty
-                              ? "name cannot be empty"
-                              : null,
+                      decoration: textInputDecoration.copyWith(
+                          hintText: "Full name",
+                          // errorText: NameController.text.isNotEmpty
+                          //       ? "name cannot be empty"
+                          //       : null,
                           hintStyle: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          )),
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                      // decoration: InputDecoration(
+                      //     contentPadding: EdgeInsets.only(bottom: 3),
+                      //     labelText: "full name",
+                      //     floatingLabelBehavior: FloatingLabelBehavior.always,
+                      //     errorText: NameController.text.isNotEmpty
+                      //         ? "name cannot be empty"
+                      //         : null,
+                      //     hintStyle: TextStyle(
+                      //       fontSize: 16,
+                      //       fontWeight: FontWeight.bold,
+                      //       color: Colors.black,
+                      //     )),
                     ),
                     Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -138,50 +148,90 @@ class _ProfileViewState extends State<ProfileView> {
                           ),
                         ]),
                     SizedBox(height: 20.0),
-                    Text("Rewards",
+                    Text(!currentUser.isAdmin ? "Rewards" : "Admin Services",
                         style: TextStyle(
                             fontSize: 25, fontWeight: FontWeight.w500)),
                     SizedBox(height: 10.0),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        CircleAvatar(
-                            backgroundImage: AssetImage("images/coins.png"),
-                            backgroundColor: Colors.yellow,
-                            radius: 15.0),
-                        Text(
-                          userRewards,
-                          style: TextStyle(
-                            fontSize: 20,
-                            color: Colors.black,
-                          ),
-                        ),
-                        SizedBox(
-                          width: 70.0,
-                        ),
-                        RaisedButton(
-                          onPressed: () {
-                            Navigator.push(context,
-                                MaterialPageRoute(builder: (context) {
-                              return CouponRedemptionView();
-                            })).then((value) => setState(() {
-                                  getCurrentUser();
-                                }));
-                          },
-                          color: Colors.green,
-                          child: Text(
-                            "REDEEM",
-                            style: TextStyle(
-                                fontSize: 14,
-                                letterSpacing: 2.2,
-                                color: Colors.white),
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 43),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(20)),
-                        ),
-                      ],
-                    )
+                    !currentUser.isAdmin
+                        // normal user
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              CircleAvatar(
+                                  backgroundImage:
+                                      AssetImage("images/coins.png"),
+                                  backgroundColor: Colors.yellow,
+                                  radius: 15.0),
+                              Text(
+                                userRewards,
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  color: Colors.black,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 70.0,
+                              ),
+                              RaisedButton(
+                                onPressed: () {
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return CouponRedemptionView();
+                                  })).then((value) => setState(() {
+                                        getCurrentUser();
+                                      }));
+                                },
+                                color: Colors.green,
+                                child: Text(
+                                  "REDEEM",
+                                  style: TextStyle(
+                                      fontSize: 14,
+                                      letterSpacing: 2.2,
+                                      color: Colors.white),
+                                ),
+                                padding: EdgeInsets.symmetric(horizontal: 43),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                              ),
+                            ],
+                          )
+                        // admin services
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              RaisedButton(
+                                  onPressed: () {
+                                    Navigator.push(context,
+                                        MaterialPageRoute(builder: (context) {
+                                      return CouponRedemptionView();
+                                    }));
+                                  },
+                                  color: Colors.green,
+                                  child: Text(
+                                    "MANAGE COUPON",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        letterSpacing: 2.2,
+                                        color: Colors.white),
+                                  ),
+                                  padding: EdgeInsets.symmetric(horizontal: 43),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20))),
+                              RaisedButton(
+                                  onPressed: () {},
+                                  color: Colors.green,
+                                  child: Text(
+                                    "   ADD FOGGING   ",
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        letterSpacing: 2.2,
+                                        color: Colors.white),
+                                  ),
+                                  padding: EdgeInsets.symmetric(horizontal: 43),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(20)))
+                            ],
+                          )
                   ],
                 ))));
   } //build

@@ -8,6 +8,7 @@
 .buildlog/
 .history
 .svn/
+list_of_coupons.text
 
 # IntelliJ related
 *.iml

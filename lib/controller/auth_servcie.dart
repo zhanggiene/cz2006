@@ -15,6 +15,11 @@ class AuthenticationServices {
     return User(firebaseUser?.uid, name: firebaseUser?.displayName);
   }
 
+  Future<String> getMail() async {
+    var firebaseUser = await _auth.currentUser();
+    return firebaseUser.email;
+  }
+
   Future<void> sendEmailVerification() async {
     var user = await _auth.currentUser();
     user.sendEmailVerification();
