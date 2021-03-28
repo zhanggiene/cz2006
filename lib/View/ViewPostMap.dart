@@ -18,6 +18,7 @@ class ViewPostMap extends StatefulWidget {
 
 class _ViewPostState extends State<ViewPostMap> {
   Completer<GoogleMapController> _controller = Completer();
+  BitmapDescriptor pinLocationIcon;
   Set<Marker> _markers = {};
   List<Post> posts;
   bool loading = true;
@@ -27,6 +28,12 @@ class _ViewPostState extends State<ViewPostMap> {
 
   @override
   void initState() {
+    BitmapDescriptor.fromAssetImage(
+            ImageConfiguration(size: Size(12, 12)), 'assets/logo.png')
+        .then((onValue) {
+      print("hi");
+      pinLocationIcon = onValue;
+    });
     super.initState();
     getdata();
   }
@@ -46,6 +53,7 @@ class _ViewPostState extends State<ViewPostMap> {
       _markers.add(Marker(
         markerId: MarkerId(i.id),
         position: i.location,
+        //icon: pinLocationIcon,
         onTap: () {
           setState(() {
             infoPosition = 0;
@@ -116,43 +124,84 @@ Widget infoCard(context, double position, Post p) {
                     offset: Offset.zero,
                     color: Colors.grey.withOpacity(0.5))
               ]),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                width: 50,
-                height: 50,
-                margin: EdgeInsets.only(left: 10),
-                color: Colors.redAccent,
-              ),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.only(left: 20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(p.title),
-                      Text(DateFormat('yyyy-MM-dd').format(
-                          DateTime.fromMicrosecondsSinceEpoch(
-                              p.timeOfCreation))),
-                    ],
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(context, ScaleRoute(page: Detail(post: p)));
+              },
+              splashColor: Colors.green,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    width: 50,
+                    height: 50,
+                    margin: EdgeInsets.only(left: 10),
+                    color: Colors.redAccent,
                   ),
-                ),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(left: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text(p.title),
+                          Text(DateFormat('yyyy-MM-dd').format(
+                              DateTime.fromMicrosecondsSinceEpoch(
+                                  p.timeOfCreation))),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    width: 50,
+                    height: 50,
+                    margin: EdgeInsets.only(right: 20),
+                    child: Icon(
+                      Icons.arrow_right_alt_rounded,
+                      size: 50.0,
+                      color: Colors.green,
+                    ),
+                  ),
+                ],
               ),
-              Container(
-                width: 50,
-                height: 50,
-                margin: EdgeInsets.only(right: 20),
-                child: Icon(
-                  Icons.arrow_right_alt_rounded,
-                  size: 50.0,
-                  color: Colors.green,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ));
+}
+
+class ScaleRoute extends PageRouteBuilder {
+  final Widget page;
+  ScaleRoute({this.page})
+      : super(
+          pageBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) =>
+              page,
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) =>
+              ScaleTransition(
+            scale: Tween<double>(
+              begin: 0.0,
+              end: 1.0,
+            ).animate(
+              CurvedAnimation(
+                parent: animation,
+                //curve: Curves.fastOutSlowIn,
+                curve: Curves.ease,
+              ),
+            ),
+            child: child,
+          ),
+        );
 }
