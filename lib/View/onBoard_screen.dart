@@ -29,7 +29,7 @@ class CustomUI extends StatelessWidget {
           },
           onBoardData: onBoardData,
           titleStyles: TextStyle(
-            color: Colors.deepOrange,
+            color: Colors.black,
             fontSize: 18,
             fontWeight: FontWeight.w900,
             letterSpacing: 0.15,
@@ -91,20 +91,20 @@ class CustomUI extends StatelessWidget {
 
 final List<OnBoardModel> onBoardData = [
   OnBoardModel(
-    title: "Join the community",
-    description: "Fight dengue together",
+    title: "Stay alert to mosquitoes",
+    description: "Open the map, view and avoid NEA-identified dengue clusters. Be careful!",
     imgUrl: "images/intro1.png",
   ),
   OnBoardModel(
-    title: "Track your progress with statistics",
+    title: "Contribute to the battle",
     description:
-        "Analyse personal result with detailed chart and numerical values",
+        "Share what you see with the community, fight dengue together with fellow Singaporeans.",
     imgUrl: 'images/intro2.png',
   ),
   OnBoardModel(
-    title: "Create photo comparisons and share your results",
+    title: "Attractive prizes await",
     description:
-        "Take before and after photos to visualize progress and get the shape that you dream about",
+        "Post quality content and earn coins. Redeem various attractive prizes with what you earn.",
     imgUrl: 'images/intro3.png',
   ),
 ];
