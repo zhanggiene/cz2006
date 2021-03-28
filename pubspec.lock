@@ -372,7 +372,7 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3"
-  like_button :
+  like_button:
     dependency: "direct main"
     description:
       name: like_button

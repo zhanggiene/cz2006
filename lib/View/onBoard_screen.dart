@@ -3,13 +3,13 @@ import 'package:cz2006/controller/rootPage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_onboard/flutter_onboard.dart';
 import 'package:provider/provider.dart';
+
 class OnBoardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomUI();
   }
 }
-
 
 class CustomUI extends StatelessWidget {
   final PageController _pageController = PageController();
@@ -21,8 +21,11 @@ class CustomUI extends StatelessWidget {
         body: OnBoard(
           pageController: _pageController,
           onSkip: () {
-             Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (BuildContext context) => new RootPage(auth: new AuthenticationServices())));
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (BuildContext context) =>
+                        new RootPage(auth: new AuthenticationServices())));
           },
           onDone: () {
             print('done tapped');
@@ -48,7 +51,7 @@ class CustomUI extends StatelessWidget {
           nextButton: Consumer<OnBoardState>(
             builder: (BuildContext context, OnBoardState state, Widget child) {
               return InkWell(
-                onTap: () => _onNextTap(context,state),
+                onTap: () => _onNextTap(context, state),
                 child: Container(
                   width: 230,
                   height: 50,
@@ -75,7 +78,7 @@ class CustomUI extends StatelessWidget {
     );
   }
 
-  void _onNextTap(BuildContext context,OnBoardState onBoardState) {
+  void _onNextTap(BuildContext context, OnBoardState onBoardState) {
     if (!onBoardState.isLastPage) {
       _pageController.animateToPage(
         onBoardState.page + 1,
@@ -84,7 +87,10 @@ class CustomUI extends StatelessWidget {
       );
     } else {
       Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (BuildContext context) => new RootPage(auth: new AuthenticationServices())));
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) =>
+                  new RootPage(auth: new AuthenticationServices())));
     }
   }
 }
