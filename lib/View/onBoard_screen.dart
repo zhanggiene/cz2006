@@ -93,18 +93,18 @@ final List<OnBoardModel> onBoardData = [
   OnBoardModel(
     title: "Join the community",
     description: "Fight dengue together",
-    imgUrl: "images/Intro1.png",
+    imgUrl: "images/intro1.png",
   ),
   OnBoardModel(
     title: "Track your progress with statistics",
     description:
         "Analyse personal result with detailed chart and numerical values",
-    imgUrl: 'images/Intro1.png',
+    imgUrl: 'images/intro2.png',
   ),
   OnBoardModel(
     title: "Create photo comparisons and share your results",
     description:
         "Take before and after photos to visualize progress and get the shape that you dream about",
-    imgUrl: 'images/Intro1.png',
+    imgUrl: 'images/intro3.png',
   ),
 ];
