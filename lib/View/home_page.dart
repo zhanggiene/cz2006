@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
     return new Scaffold(
       backgroundColor: Colors.white10,
       appBar: new AppBar(
-        title: Text("Flutter Auth Email"),
+        title: Text("MosQUITo",textAlign: TextAlign.center),
         actions: [
           FlatButton(
             onPressed: _signOut,
@@ -64,7 +64,12 @@ class _HomePageState extends State<HomePage> {
         items: [
           TabItem(icon: Icons.map, title: 'map'),
           TabItem(icon: Icons.note_add, title: 'bites'),
-          TabItem(icon: Icons.cake, title: 'main page'),
+          TabItem(
+            icon: Icons.home,
+            activeIcon: Image.asset("images/logo.png", color: Colors.blue,),
+            title: "Home",
+            isIconBlend: true
+          ),
           TabItem(icon: Icons.group, title: 'community'),
           TabItem(icon: Icons.person, title: 'profile'),
         ],
