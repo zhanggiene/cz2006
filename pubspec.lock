@@ -372,15 +372,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.3"
-<<<<<<< HEAD
-  like_button:
+  like_button :
     dependency: "direct main"
     description:
       name: like_button
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.2"
-=======
   logging:
     dependency: transitive
     description:
@@ -395,7 +393,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.0"
->>>>>>> 0dee2502685b3a6b2048384cffd03d3df0fa8f1d
   matcher:
     dependency: transitive
     description:

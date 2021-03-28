@@ -86,60 +86,73 @@ class _ViewPostState extends State<ViewPostMap> {
               });
             },
           ),
-          infoCard(infoPosition, currentPost),
+          infoCard(context, infoPosition, currentPost),
         ],
       ),
     );
   }
 }
 
-Widget infoCard(double position, Post p) {
+Widget infoCard(context, double position, Post p) {
   if (p == null) {
     return Text("check your internet");
   }
   return AnimatedPositioned(
-    bottom: position,
-    right: 0,
-    left: 0,
-    duration: Duration(milliseconds: 200),
-    child: Align(
-      alignment: Alignment.bottomCenter,
-      child: Container(
-        margin: EdgeInsets.all(20),
-        height: 70,
-        decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.all(Radius.circular(50)),
-            boxShadow: <BoxShadow>[
-              BoxShadow(
-                  blurRadius: 20,
-                  offset: Offset.zero,
-                  color: Colors.grey.withOpacity(0.5))
-            ]),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(
-              width: 50,
-              height: 50,
-              margin: EdgeInsets.only(left: 10),
-            ),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.only(left: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(p.title),
-                  ],
+      bottom: position,
+      right: 0,
+      left: 0,
+      duration: Duration(milliseconds: 200),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          margin: EdgeInsets.all(20),
+          height: 70,
+          decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.all(Radius.circular(50)),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                    blurRadius: 20,
+                    offset: Offset.zero,
+                    color: Colors.grey.withOpacity(0.5))
+              ]),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                width: 50,
+                height: 50,
+                margin: EdgeInsets.only(left: 10),
+                color: Colors.redAccent,
+              ),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.only(left: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(p.title),
+                      Text(DateFormat('yyyy-MM-dd').format(
+                          DateTime.fromMicrosecondsSinceEpoch(
+                              p.timeOfCreation))),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+              Container(
+                width: 50,
+                height: 50,
+                margin: EdgeInsets.only(right: 20),
+                child: Icon(
+                  Icons.arrow_right_alt_rounded,
+                  size: 50.0,
+                  color: Colors.green,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    ),
-  );
+      ));
 }

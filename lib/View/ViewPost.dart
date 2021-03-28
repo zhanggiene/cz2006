@@ -36,17 +36,17 @@ class _ViewPostState extends State<ViewPost> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.amber),
-        title: Text('profile'),
-        backgroundColor: Colors.white,
-      ),
-      body: loading
-          ? Center(child: CircularProgressIndicator())
-          : ListView.separated(
-              itemBuilder: (BuildContext context, int index) {
-                return InkWell(
-                    child: ListTile(
+        appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.amber),
+          title: Text('profile'),
+          backgroundColor: Colors.white,
+        ),
+        body: loading
+            ? Center(child: CircularProgressIndicator())
+            : ListView.separated(
+                itemBuilder: (BuildContext context, int index) {
+                  return InkWell(
+                      child: ListTile(
                         leading: Image.network(
                           //"https://guardiandigital.com/images/url-defense.png",
                           posts[index].images[0],
@@ -55,38 +55,37 @@ class _ViewPostState extends State<ViewPost> {
                           width: 120,
                           fit: BoxFit.fitWidth,
                         ),
-                        title: Text(posts[index].content),
-                        subtitle: Text(DateFormat('yyyy-MM-dd').format(DateTime.fromMicrosecondsSinceEpoch(posts[index].timeOfCreation))),),
-                    onTap: () {
-                      print(posts[index].id);
-                      Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      Detail(post: posts[index])))
-                          .then((value) => setState(() {
-                                getdata();
-                              }));
-                    });
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return Divider(
-                  color: Colors.black,
-                );
-              },
-              itemCount: posts.length),
-    floatingActionButton: FloatingActionButton(
-
-      onPressed: (){
-        Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => UploadPhotoPage()),
-  );
-
-      },
-      child: Icon(Icons.add),
-      backgroundColor: Colors.green,
-    )
-    );
+                        title: Text(posts[index].title),
+                        subtitle: Text(DateFormat('yyyy-MM-dd').format(
+                            DateTime.fromMicrosecondsSinceEpoch(
+                                posts[index].timeOfCreation))),
+                      ),
+                      onTap: () {
+                        Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Detail(post: posts[index])))
+                            .then((value) => setState(() {
+                                  getdata();
+                                }));
+                      });
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return Divider(
+                    color: Colors.black,
+                  );
+                },
+                itemCount: posts.length),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => UploadPhotoPage()),
+            );
+          },
+          child: Icon(Icons.add),
+          backgroundColor: Colors.green,
+        ));
   }
 }

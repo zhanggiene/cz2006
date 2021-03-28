@@ -60,17 +60,6 @@ class _ProfileViewState extends State<ProfileView> {
                       height: 15,
                     ),
                     // Text(currentUser.name),
-                    TextButton(
-                        child: Text("EDIT"),
-                        style: TextButton.styleFrom(
-                          primary: Colors.green,
-                        ),
-                        onPressed: () => showBarModalBottomSheet(
-                              expand: true,
-                              context: context,
-                              backgroundColor: Colors.transparent,
-                              builder: (context) => Text("hi"),
-                            )),
                     ProfileImage(
                       url: currentUser?.imageURL,
                       onTap: () async {

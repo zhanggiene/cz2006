@@ -56,6 +56,7 @@ class PostController {
     _postsCollectionReference.document(post.id).delete();
     //postDeleted(post); // call back function.
   }
+  
 
   void likePost(User a, Post post) {
     post.addLikedUserId(a.UserId);
@@ -63,6 +64,8 @@ class PostController {
     var variable = Firestore.instance.collection('users').document(a.UserId);
     variable.updateData({"likedNum": FieldValue.increment(1)});
   }
+
+
 
   Future<List<Post>> getPostByTime() async {
     QuerySnapshot snapshot = await _postsCollectionReference.getDocuments();
