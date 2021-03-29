@@ -24,7 +24,6 @@ class _ProfileViewState extends State<ProfileView> {
   User currentUser = locator.get<UserController>().currentuser;
   final NameController = TextEditingController();
   @override
-  @override
   void initState() {
     super.initState();
     NameController.text = currentUser.name;
