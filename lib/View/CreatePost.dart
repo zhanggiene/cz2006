@@ -59,7 +59,7 @@ class _UploadPhotoPageState extends State<UploadPhotoPage> {
               child: Text("Pick images"),
               onPressed: pickImages,
             ),
-            Expanded(
+            Flexible(
               child: GridView.count(
                 crossAxisCount: 3,
                 children: List.generate(images.length, (index) {

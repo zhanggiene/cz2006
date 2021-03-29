@@ -41,9 +41,6 @@ class _ProfileViewState extends State<ProfileView> {
     getCurrentUser();
 
     return Scaffold(
-        appBar: AppBar(
-          title: currentUser.isAdmin ? Text('Admin') : Text('Profile'),
-        ),
         body: Container(
             padding: EdgeInsets.only(left: 16, top: 25, right: 16),
             child: GestureDetector(
