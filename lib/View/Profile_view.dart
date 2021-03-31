@@ -24,7 +24,6 @@ class _ProfileViewState extends State<ProfileView> {
   User currentUser = locator.get<UserController>().currentuser;
   final NameController = TextEditingController();
   @override
-  @override
   void initState() {
     super.initState();
     NameController.text = currentUser.name;
@@ -37,7 +36,7 @@ class _ProfileViewState extends State<ProfileView> {
     Future<void> getCurrentUser() async {
       user = locator.get<UserController>().currentuser;
       userRewards = user.coins.toString();
-      NameController.text = currentUser.name;
+      user.imageURL = await locator.get<UserController>().downloadurl();
     }
 
     getCurrentUser();

@@ -1,9 +1,15 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cz2006/models/Coupon.dart';
+
+import '../locator.dart';
+import 'StorageRepo.dart';
 
 class CouponController {
   final CollectionReference couponCollection =
       Firestore().collection('coupons');
+  StorageService _storageService = locator.get<StorageService>();
 
   List<Coupon> _couponFromSnapshot(QuerySnapshot snapshot) {
     return snapshot.documents.map((doc) {
@@ -28,5 +34,12 @@ class CouponController {
     couponCollection.document(title).setData(
         {'title': title, 'couponValue': couponValue, 'imageURL': imageURL});
     print("added coupon " + title);
+  }
+
+  Future<String> uploadCouponImage(File image, String couponTitle) async {
+    String imageURL = await locator
+        .get<StorageService>()
+        .uploadCouponImage(image, couponTitle);
+    return imageURL;
   }
 }

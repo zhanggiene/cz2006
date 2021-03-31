@@ -6,7 +6,7 @@ import 'package:get_it/get_it.dart';
 
 final locator = GetIt.instance;
 
-// create and manage singleton. 
+// create and manage singleton.
 void setup() {
   locator.registerLazySingleton<AuthenticationServices>(
       () => AuthenticationServices());
