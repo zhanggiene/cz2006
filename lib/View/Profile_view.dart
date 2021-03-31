@@ -37,6 +37,7 @@ class _ProfileViewState extends State<ProfileView> {
     Future<void> getCurrentUser() async {
       user = locator.get<UserController>().currentuser;
       userRewards = user.coins.toString();
+      NameController.text = currentUser.name;
     }
 
     getCurrentUser();

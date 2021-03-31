@@ -67,10 +67,9 @@ class UserController {
     currentUser.coins = currentUser.coins + changes;
   }
 
-  Future<void> updateOtherUserCoins(String userID,int changes) async{
+  Future<void> updateOtherUserCoins(String userID, int changes) async {
     var variable = Firestore.instance.collection('users').document(userID);
     variable.updateData({"rewards": FieldValue.increment(changes)});
-
   }
 
   Future<int> getCoins() async {
@@ -80,8 +79,6 @@ class UserController {
         .get();
     return variable.data['rewards'];
   }
-
-
 
   Stream<DocumentSnapshot> get userSnapshot {
     User currentUser = locator.get<UserController>().currentuser;

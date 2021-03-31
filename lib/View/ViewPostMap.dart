@@ -12,6 +12,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:intl/intl.dart';
 import 'dart:ui' as ui;
 
+import 'package:location/location.dart';
+
 class ViewPostMap extends StatefulWidget {
   ViewPostMap({Key key}) : super(key: key);
 
@@ -28,82 +30,119 @@ class _ViewPostState extends State<ViewPostMap> {
   double infoPosition = -100;
   Post currentPost;
   String apiKey = "AIzaSyCVNX_dr0ebA4zmzokVUxcizwN1NRdifcI";
+  LocationData currentLocation;
+  Location location;
 
   @override
-  Future<void> initState(){
-    getBytesFromAsset('images/marker.png', 150).then((value) => pinLocationIcon=value);
-        super.initState();
-        getdata();
-      }
-    
-      getdata() async {
-        print("to get all posts");
-        locator.get<PostController>().getPostByTime().then((value) {
-          posts = value;
+  Future<void> initState() {
+    location = new Location();
+
+    location.onLocationChanged.listen((LocationData cLoc) {
+      // cLoc contains the lat and long of the
+      // current user's position in real time,
+      // so we're holding on to it
+      currentLocation = cLoc;
+      print(currentLocation.latitude);
+    });
+    setInitialLocation();
+    getBytesFromAsset('images/marker.png', 150)
+        .then((value) => pinLocationIcon = value);
+    super.initState();
+    getdata();
+  }
+
+  void setInitialLocation() async {
+    // set the initial location by pulling the user's
+    // current location from the location's getLocation()
+    print("set initial location");
+    currentLocation = await location.getLocation();
+    print("initiliza the location"+currentLocation.altitude.toString());
+
+    // hard-coded destination for this example
+  }
+
+  getdata() async {
+    print("to get all posts");
+    locator.get<PostController>().getPostByTime().then((value) {
+      posts = value;
+      setState(() {
+        loading = false;
+      });
+    });
+  }
+
+  void setMapPins() {
+    for (Post i in posts) {
+      _markers.add(Marker(
+        markerId: MarkerId(i.id),
+        position: i.location,
+        icon: BitmapDescriptor.fromBytes(pinLocationIcon),
+        onTap: () {
           setState(() {
-            loading = false;
+            infoPosition = 0;
+            currentPost = i;
           });
-        });
-      }
-    
-      void setMapPins() {
-        for (Post i in posts) {
-          _markers.add(Marker(
-            markerId: MarkerId(i.id),
-            position: i.location,
-            icon: BitmapDescriptor.fromBytes(pinLocationIcon),
-            onTap: () {
+        },
+      ));
+    }
+  }
+
+  onMapCreated(GoogleMapController controller) {
+    _controller.complete(controller);
+    setMapPins();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    CameraPosition initialLocation = CameraPosition(
+      target: LatLng(1.3521, 103.8198),
+      zoom: 13,
+      bearing: 30,
+      tilt: 0,
+    );
+
+    if (currentLocation != null) {
+      initialLocation = CameraPosition(
+        target: LatLng(currentLocation.latitude, currentLocation.longitude),
+        zoom: 13,
+        tilt: 30,
+      );
+    }
+    return new Scaffold(
+      body: Stack(
+        children: [
+          GoogleMap(
+            myLocationButtonEnabled: true,
+            compassEnabled: true,
+            myLocationEnabled: true,
+            zoomControlsEnabled: true,
+            zoomGesturesEnabled: true,
+            tiltGesturesEnabled: false,
+            markers: _markers,
+            mapType: MapType.normal,
+            initialCameraPosition: initialLocation,
+            onMapCreated: onMapCreated,
+            onTap: (LatLng location) {
               setState(() {
-                infoPosition = 0;
-                currentPost = i;
+                infoPosition = -100;
               });
             },
-          ));
-        }
-      }
-    
-      onMapCreated(GoogleMapController controller) {
-        _controller.complete(controller);
-        setMapPins();
-      }
-    
-      @override
-      Widget build(BuildContext context) {
-        CameraPosition initialLocation = CameraPosition(
-          target: LatLng(1.3521, 103.8198),
-          zoom: 13,
-          bearing: 30,
-          tilt: 0,
-        );
-        return new Scaffold(
-          body: Stack(
-            children: [
-              GoogleMap(
-                myLocationButtonEnabled: true,
-                compassEnabled: true,
-                tiltGesturesEnabled: false,
-                markers: _markers,
-                mapType: MapType.normal,
-                initialCameraPosition: initialLocation,
-                onMapCreated: onMapCreated,
-                onTap: (LatLng location) {
-                  setState(() {
-                    infoPosition = -100;
-                  });
-                },
-              ),
-              infoCard(context, infoPosition, currentPost),
-            ],
           ),
-        );
-      }
-    
-      Future<Uint8List> getBytesFromAsset(String path, int width) async {
-  ByteData data = await rootBundle.load(path);
-  ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(), targetWidth: width);
-  ui.FrameInfo fi = await codec.getNextFrame();
-  return (await fi.image.toByteData(format: ui.ImageByteFormat.png)).buffer.asUint8List();
-}
+          infoCard(context, infoPosition, currentPost),
+        ],
+      ),
+    );
+  }
+
+  Future<Uint8List> getBytesFromAsset(String path, int width) async {
+    ByteData data = await rootBundle.load(path);
+    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
+        targetWidth: width);
+    ui.FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
+        .buffer
+        .asUint8List();
+  }
 }
 
 Widget infoCard(context, double position, Post p) {
