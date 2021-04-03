@@ -25,14 +25,8 @@ class ViewDengueMap extends StatefulWidget {
 class _ViewPostState extends State<ViewDengueMap> {
   Completer<GoogleMapController> _controller = Completer();
   Uint8List pinLocationIcon;
-  List<LatLng> polygonCoords = [
-    LatLng(1.43296265331129, 103.08832357078792),
-    LatLng(2.43006265331129, 104.18832357078792),
-    LatLng(3.43006265331129, 109.38332357078792),
-    LatLng(1.43296265331129, 103.08832357078792)
-  ];
-
-  List<LatLng> point = List<LatLng>();
+  List<LatLng> polygonCoords=new List();
+  
   List<Post> posts;
   bool loading = true;
   double infoPosition = -100;
@@ -113,10 +107,12 @@ class _ViewPostState extends State<ViewDengueMap> {
   }
 
   void addPoints() {
-    for (var i = 0; i < GeoJson.IN.length; i++) {
-      var ltlng = LatLng(GeoJson.IN[i][1], GeoJson.IN[i][0]);
-      point.add(ltlng);
+    for (var i = 0; i < 4; i++) {
+      var ltlng = LatLng(i/7.0, (i+5)/7.0+100);
+      polygonCoords.add(ltlng);
     }
+    polygonCoords.add(LatLng(0/7.0, (0+1)/7.0+100));
+
   }
 
   Set<Polygon> myPolygon() {
