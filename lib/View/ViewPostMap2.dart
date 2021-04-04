@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:collection';
+import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:cz2006/View/GeoJson.dart';
 import 'package:cz2006/View/details.dart';
 import 'package:cz2006/controller/PostController.dart';
 import 'package:cz2006/locator.dart';
+import 'package:cz2006/models/Cluster.dart';
 import 'package:cz2006/models/Post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +16,11 @@ import 'package:intl/intl.dart';
 
 import 'package:location/location.dart';
 import 'dart:ui' as ui;
+import 'package:html/parser.dart' show parse;
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:shape_of_view/shape_of_view.dart';
+
+import 'ViewPostMap.dart';
 
 class ViewDengueMap extends StatefulWidget {
   ViewDengueMap({Key key}) : super(key: key);
@@ -25,12 +32,10 @@ class ViewDengueMap extends StatefulWidget {
 class _ViewPostState extends State<ViewDengueMap> {
   Completer<GoogleMapController> _controller = Completer();
   Uint8List pinLocationIcon;
-  List<LatLng> polygonCoords=new List();
-  
-  List<Post> posts;
+  List<Cluster> clusters = new List();
   bool loading = true;
-  double infoPosition = -100;
-  Post currentPost;
+  double infoPosition = -250;
+  Cluster currentCluster;
   String apiKey = "AIzaSyCVNX_dr0ebA4zmzokVUxcizwN1NRdifcI";
   LocationData currentLocation;
   Location location;
@@ -44,42 +49,35 @@ class _ViewPostState extends State<ViewDengueMap> {
       // current user's position in real time,
       // so we're holding on to it
       currentLocation = cLoc;
-      print(currentLocation.latitude);
+      //print(currentLocation.latitude);
     });
     setInitialLocation();
     getdata();
-    addPoints();
   }
 
   void setInitialLocation() async {
     // set the initial location by pulling the user's
     // current location from the location's getLocation()
-    print("set initial location");
+    //print("set initial location");
     currentLocation = await location.getLocation();
-    print("initiliza the location" + currentLocation.altitude.toString());
+    //print("initiliza the location" + currentLocation.altitude.toString());
 
     // hard-coded destination for this example
   }
 
   getdata() async {
-    print("to get all posts");
-    locator.get<PostController>().getPostByTime().then((value) {
-      posts = value;
-      setState(() {
-        loading = false;
-      });
-    });
-  }
-
-  bool _checkIfValidMarker(LatLng tap, List<LatLng> vertices) {
-    int intersectCount = 0;
-    for (int j = 0; j < vertices.length - 1; j++) {
-      if (rayCastIntersect(tap, vertices[j], vertices[j + 1])) {
-        intersectCount++;
-      }
+    var data = await rootBundle.loadString('images/data.geojson');
+    var lists = json.decode(data)['features'];
+    for (var i = 0; i < lists.length; i++) {
+      //print("hi");
+      var cluster = Cluster.fromMap(lists[i]);
+      //print(cluster.locations);
+      clusters.add(cluster);
     }
 
-    return ((intersectCount % 2) == 1); // odd = inside, even = outside;
+    setState(() {
+      loading = false;
+    });
   }
 
   bool rayCastIntersect(LatLng tap, LatLng vertA, LatLng vertB) {
@@ -102,28 +100,47 @@ class _ViewPostState extends State<ViewDengueMap> {
     return x > pX;
   }
 
+  int _checkIfValidMarker(LatLng tap) {
+    for (int i = 0; i < clusters.length; i++) {
+      int intersectCount = 0;
+      for (int j = 0; j < clusters[i].locations.length - 1; j++) {
+        if (rayCastIntersect(
+            tap, clusters[i].locations[j], clusters[i].locations[j + 1])) {
+          intersectCount++;
+        }
+      }
+
+      if ((intersectCount % 2) == 1) {
+        return i; // odd = inside, even = outside;
+
+      }
+    }
+
+    return -1;
+  }
+
   onMapCreated(GoogleMapController controller) {
     _controller.complete(controller);
   }
 
-  void addPoints() {
-    for (var i = 0; i < 4; i++) {
-      var ltlng = LatLng(i/7.0, (i+5)/7.0+100);
-      polygonCoords.add(ltlng);
-    }
-    polygonCoords.add(LatLng(0/7.0, (0+1)/7.0+100));
-
-  }
-
   Set<Polygon> myPolygon() {
     Set polygon = HashSet<Polygon>();
-    polygon.add(Polygon(
-        polygonId: PolygonId('test'),
-        points: polygonCoords,
-        strokeWidth: 2,
-        fillColor: Colors.yellow.withOpacity(0.15),
-        strokeColor: Colors.red));
+    for (int i = 0; i < clusters.length; i++) {
+      print("building polygon");
+      //print(clusters[i].locations);
+      polygon.add(Polygon(
+          polygonId: PolygonId(i.toString()),
+          points: clusters[i].locations,
+          strokeWidth: 2,
+          fillColor: Colors.yellow.withOpacity(0.15),
+          strokeColor: Colors.green));
+    }
     return polygon;
+  }
+
+  Future<void> getData() async {
+    var data = await rootBundle.loadString('images/data.geojson');
+    //print(json.decode(data)['features']);
   }
 
   @override
@@ -146,136 +163,80 @@ class _ViewPostState extends State<ViewDengueMap> {
       body: Stack(
         children: [
           GoogleMap(
-            myLocationButtonEnabled: true,
-            compassEnabled: true,
-            myLocationEnabled: true,
-            zoomControlsEnabled: true,
-            zoomGesturesEnabled: true,
-            tiltGesturesEnabled: false,
-            polygons: myPolygon(),
-            mapType: MapType.normal,
-            initialCameraPosition: initialLocation,
-            onMapCreated: onMapCreated,
-            onTap: (LatLng location) {
-              setState(() {
-                //infoPosition = -100;
-                //_checkIfValidMarker(location, point);
-                //
-                //
-                if (_checkIfValidMarker(location, polygonCoords)) {
-                  print("hu");
-                }
-              });
-            },
-          ),
-          infoCard(context, infoPosition, currentPost),
+              myLocationButtonEnabled: true,
+              compassEnabled: true,
+              myLocationEnabled: true,
+              zoomControlsEnabled: true,
+              zoomGesturesEnabled: true,
+              tiltGesturesEnabled: false,
+              polygons: myPolygon(),
+              mapType: MapType.normal,
+              initialCameraPosition: initialLocation,
+              onMapCreated: onMapCreated,
+              onTap: (LatLng location) {
+                setState(() {
+                  infoPosition = -250;
+                  //_checkIfValidMarker(location, point);
+                  if (_checkIfValidMarker(location) != -1) {
+                    infoPosition = 0;
+                    currentCluster = clusters[_checkIfValidMarker(location)];
+                  }
+
+                  //
+                  //
+                });
+              }),
+          infoCard(context, infoPosition, currentCluster),
         ],
       ),
     );
   }
 }
 
-Widget infoCard(context, double position, Post p) {
+Widget infoCard(context, double position, Cluster p) {
   if (p == null) {
     return Text("check your internet");
   }
-  return AnimatedPositioned(
-      bottom: position,
-      right: 0,
-      left: 0,
-      duration: Duration(milliseconds: 200),
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-          margin: EdgeInsets.all(20),
-          height: 70,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(50)),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    blurRadius: 20,
-                    offset: Offset.zero,
-                    color: Colors.grey.withOpacity(0.5))
-              ]),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () {
-                Navigator.push(context, ScaleRoute(page: Detail(post: p)));
-              },
-              splashColor: Colors.green,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
+    return AnimatedPositioned(
+        bottom: position,
+        right: 0,
+        left: 0,
+        duration: Duration(milliseconds: 300),
+        child: Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+
+            margin: EdgeInsets.all(20),
+            height: 200,
+            child: ShapeOfView(
+              shape:ArcShape(
+                direction: ArcDirection.Outside,
+                height: 50,
+                position: ArcPosition.Top,
+
+              ),
+
+            
+              child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Container(
-                    width: 50,
-                    height: 50,
-                    margin: EdgeInsets.only(left: 10),
-                    color: Colors.redAccent,
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(left: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(p.title),
-                          Text(DateFormat('yyyy-MM-dd').format(
-                              DateTime.fromMicrosecondsSinceEpoch(
-                                  p.timeOfCreation))),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 50,
-                    height: 50,
-                    margin: EdgeInsets.only(right: 20),
-                    child: Icon(
-                      Icons.arrow_right_alt_rounded,
-                      size: 50.0,
-                      color: Colors.green,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ));
-}
 
-class ScaleRoute extends PageRouteBuilder {
-  final Widget page;
-  ScaleRoute({this.page})
-      : super(
-          pageBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-          ) =>
-              page,
-          transitionsBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) =>
-              ScaleTransition(
-            scale: Tween<double>(
-              begin: 0.0,
-              end: 1.0,
-            ).animate(
-              CurvedAnimation(
-                parent: animation,
-                //curve: Curves.fastOutSlowIn,
-                curve: Curves.ease,
+          Text(p.caseSize.toString()+" cases",style: new TextStyle(fontSize: 30.0,color: Colors.green,fontWeight: FontWeight.bold),),
+          //Text(p.home.toString()),
+          Flexible(child: Text("location: "+p.location.toString())),
+          Flexible(child: Text("home:"+p.home.toString())),
+          Flexible(child: Text("Public places:"+p.public_places.toString())),
+          Flexible(child: Text("Construction:"+p.construction.toString())),
+
+
+
+          
+          
+          
+          ],
               ),
             ),
-            child: child,
           ),
-        );
+        ));
 }

@@ -52,6 +52,8 @@ dependencies:
   mailer: ^4.0.0
   like_button: ^2.0.2
   location: ^3.0.0
+  html: ^0.15.0
+  shape_of_view: ^1.0.2
 
 dev_dependencies:
   flutter_test:
