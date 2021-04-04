@@ -4,7 +4,6 @@ import 'package:cz2006/View/Report_Bite.dart';
 import 'package:cz2006/View/ViewPost.dart';
 import 'package:cz2006/View/ViewPostMap.dart';
 import 'package:cz2006/View/ViewPostMap2.dart';
-import 'package:cz2006/View/myMain.dart';
 import 'package:cz2006/controller/auth_servcie.dart';
 import 'package:flutter/material.dart';
 import 'package:convex_bottom_bar/convex_bottom_bar.dart';
@@ -32,8 +31,8 @@ class _HomePageState extends State<HomePage> {
   bool _isEmailVerified = false;
   int selectedpage;
   final _pageOption = [
-    ViewPost(),
     ViewDengueMap(),
+    ViewPost(),
     ViewPostMap(),
     ViewPost(),
     ProfileView()
@@ -64,7 +63,7 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: ConvexAppBar(
         items: [
           TabItem(icon: Icons.map, title: 'map'),
-          TabItem(icon: Icons.note_add, title: 'bites'),
+          TabItem(icon: Icons.note_add, title:'posts'),
           TabItem(
             icon: Icons.home,
             activeIcon: Image.asset("images/logo.png", color: Colors.blue,),

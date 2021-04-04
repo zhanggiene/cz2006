@@ -3,12 +3,9 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:cz2006/View/GeoJson.dart';
-import 'package:cz2006/View/details.dart';
 import 'package:cz2006/controller/PostController.dart';
 import 'package:cz2006/locator.dart';
 import 'package:cz2006/models/Cluster.dart';
-import 'package:cz2006/models/Post.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -20,7 +17,6 @@ import 'package:html/parser.dart' show parse;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:shape_of_view/shape_of_view.dart';
 
-import 'ViewPostMap.dart';
 
 class ViewDengueMap extends StatefulWidget {
   ViewDengueMap({Key key}) : super(key: key);
