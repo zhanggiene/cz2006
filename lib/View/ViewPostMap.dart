@@ -1,251 +1,284 @@
 import 'dart:async';
-import 'dart:typed_data';
+import 'dart:convert';
 
-import 'package:cz2006/View/CreatePost.dart';
-import 'package:cz2006/View/details.dart';
-import 'package:cz2006/controller/PostController.dart';
+import 'package:cz2006/controller/UserController.dart';
 import 'package:cz2006/locator.dart';
-import 'package:cz2006/models/Post.dart';
+import 'package:cz2006/models/User.dart';
+import 'package:cz2006/models/Weather.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:intl/intl.dart';
-import 'dart:ui' as ui;
+import 'package:http/http.dart' as http;
 
 import 'package:location/location.dart';
 
-class ViewPostMap extends StatefulWidget {
-  ViewPostMap({Key key}) : super(key: key);
-
+class MainPage extends StatefulWidget {
   @override
-  _ViewPostState createState() => _ViewPostState();
+  _MainPageState createState() => _MainPageState();
 }
 
-class _ViewPostState extends State<ViewPostMap> {
-  Completer<GoogleMapController> _controller = Completer();
-  Uint8List pinLocationIcon;
-  Set<Marker> _markers = {};
-  List<Post> posts;
-  bool loading = true;
-  double infoPosition = -100;
-  Post currentPost;
-  String apiKey = "AIzaSyCVNX_dr0ebA4zmzokVUxcizwN1NRdifcI";
-  LocationData currentLocation;
-  Location location;
+class _MainPageState extends State<MainPage> {
+  User currentUser = locator.get<UserController>().currentuser;
+  DateTime now = DateTime.now();
+  Weather2Hour _2HourWeather;
+  Weather24Hour _24HourWeather;
+  Weather4Days _4DaysWeather;
 
-  @override
-  Future<void> initState() {
-    location = new Location();
-
-    location.onLocationChanged.listen((LocationData cLoc) {
-      // cLoc contains the lat and long of the
-      // current user's position in real time,
-      // so we're holding on to it
-      currentLocation = cLoc;
-      print(currentLocation.latitude);
-    });
-    setInitialLocation();
-    getBytesFromAsset('images/marker.png', 150)
-        .then((value) => pinLocationIcon = value);
-    super.initState();
-    getdata();
+  void fetchWeather() async {
+    // setState(() {});
+    _2HourWeather = await fetchWeather2Hour();
+    _24HourWeather = await fetchWeather24Hour();
+    _4DaysWeather = await fetchWeather4Days();
   }
 
-  void setInitialLocation() async {
-    // set the initial location by pulling the user's
-    // current location from the location's getLocation()
-    print("set initial location");
-    currentLocation = await location.getLocation();
-    print("initiliza the location"+currentLocation.altitude.toString());
-
-    // hard-coded destination for this example
-  }
-
-  getdata() async {
-    print("to get all posts");
-    locator.get<PostController>().getPostByTime().then((value) {
-      posts = value;
-      setState(() {
-        loading = false;
-      });
-    });
-  }
-
-  void setMapPins() {
-    for (Post i in posts) {
-      _markers.add(Marker(
-        markerId: MarkerId(i.id),
-        position: i.location,
-        icon: BitmapDescriptor.fromBytes(pinLocationIcon),
-        onTap: () {
-          setState(() {
-            infoPosition = 0;
-            currentPost = i;
-          });
-        },
-      ));
+  Future<Weather2Hour> fetchWeather2Hour() async {
+    final response = await http.get(
+        Uri.https('api.data.gov.sg', 'v1/environment/2-hour-weather-forecast'));
+    if (response.statusCode == 200) {
+      return Weather2Hour.fromJson(jsonDecode(response.body));
+    } else {
+      print(response.statusCode);
     }
   }
 
-  onMapCreated(GoogleMapController controller) {
-    _controller.complete(controller);
-    setMapPins();
+  Future<Weather24Hour> fetchWeather24Hour() async {
+    final response = await http.get(Uri.https(
+        'api.data.gov.sg', 'v1/environment/24-hour-weather-forecast'));
+    if (response.statusCode == 200) {
+      return Weather24Hour.fromJson(jsonDecode(response.body));
+    } else {
+      print(response.statusCode);
+    }
+  }
+
+  Future<Weather4Days> fetchWeather4Days() async {
+    final response = await http.get(
+        Uri.https('api.data.gov.sg', 'v1/environment/4-day-weather-forecast'));
+    if (response.statusCode == 200) {
+      return Weather4Days.fromJson(jsonDecode(response.body));
+    } else {
+      print(response.statusCode);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    CameraPosition initialLocation = CameraPosition(
-      target: LatLng(1.3521, 103.8198),
-      zoom: 13,
-      bearing: 30,
-      tilt: 0,
-    );
-
-    if (currentLocation != null) {
-      initialLocation = CameraPosition(
-        target: LatLng(currentLocation.latitude, currentLocation.longitude),
-        zoom: 13,
-        tilt: 30,
-      );
-    }
-    return new Scaffold(
-      body: Stack(
-        children: [
-          GoogleMap(
-            myLocationButtonEnabled: true,
-            compassEnabled: true,
-            myLocationEnabled: true,
-            zoomControlsEnabled: true,
-            zoomGesturesEnabled: true,
-            tiltGesturesEnabled: false,
-            markers: _markers,
-            mapType: MapType.normal,
-            initialCameraPosition: initialLocation,
-            onMapCreated: onMapCreated,
-            onTap: (LatLng location) {
-              setState(() {
-                infoPosition = -100;
-              });
-            },
+    fetchWeather();
+    print(_4DaysWeather.firstDay.datetime);
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.only(
+            top: 0.0, right: 16.0, left: 16.0, bottom: 25.0),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset("images/biglogo.png"),
+                  Text("   Hello ${currentUser.name}!",
+                      style: TextStyle(fontSize: 16)),
+                ],
+              ),
+              // Singapore reports
+              SizedBox(
+                height: 15,
+              ),
+              Row(
+                children: [
+                  Image.asset(
+                    "images/SG_report.png",
+                    width: 30.0,
+                  ),
+                  SizedBox(width: 10.0),
+                  Text("SINGAPORE",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ],
+              ),
+              Divider(thickness: 1.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Breeding areas reported",
+                          style: TextStyle(fontSize: 16)),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "images/breeding.png",
+                            width: 70.0,
+                          ),
+                          Text(" 1,805",
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      SizedBox(height: 10.0),
+                      Text("UPDATED AT: ${now.hour}:${now.minute}",
+                          style: TextStyle(fontSize: 16)),
+                    ],
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Fogging conducted", style: TextStyle(fontSize: 16)),
+                      Row(
+                        children: [
+                          Image.asset(
+                            "images/fogger.png",
+                            width: 40.0,
+                          ),
+                          Text(" 168",
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                      Text("Symptoms reported", style: TextStyle(fontSize: 16)),
+                      Row(
+                        children: [
+                          Image.asset(
+                            "images/symptoms.png",
+                            width: 30.0,
+                          ),
+                          Text(" 726",
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold)),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
+              // Daily Tips
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                children: [
+                  Image.asset(
+                    "images/daily_tips.png",
+                    width: 30.0,
+                  ),
+                  SizedBox(width: 10.0),
+                  Text("DAILY TIPS",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ],
+              ),
+              Divider(thickness: 1.0),
+              Image.asset("images/dengue_prevent.png"),
+              // Weather
+              SizedBox(
+                height: 30,
+              ),
+              Row(
+                children: [
+                  Image.asset(
+                    "images/weather.png",
+                    width: 30.0,
+                  ),
+                  SizedBox(width: 10.0),
+                  Text("WEATHER",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                ],
+              ),
+              Divider(thickness: 1.0),
+              Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Card(
+                        margin: EdgeInsets.only(bottom: 10),
+                        color: Colors.green[200],
+                        child: Padding(
+                          padding:
+                              const EdgeInsets.only(top: 10.0, bottom: 10.0),
+                          child: Column(
+                            children: [
+                              Text("2-hour nowcast",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
+                              Text(" ${_2HourWeather.forecast}")
+                            ],
+                          ),
+                        )),
+                    Card(
+                        margin: EdgeInsets.only(bottom: 10),
+                        color: Colors.green[200],
+                        child: Column(
+                          children: [
+                            Text(" ${_4DaysWeather.firstDay.datetime}",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold)),
+                            Text(" ${_4DaysWeather.firstDay.forecast}"),
+                            Text(
+                                " ${_4DaysWeather.firstDay.temperature}" +
+                                    String.fromCharCodes(Runes('\u00B0')) +
+                                    "C",
+                                style: TextStyle(fontSize: 16)),
+                          ],
+                        )),
+                    Card(
+                        margin: EdgeInsets.only(bottom: 10),
+                        color: Colors.green[200],
+                        child: Column(
+                          children: [
+                            Text(" ${_4DaysWeather.secondDay.datetime}",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold)),
+                            Text(" ${_4DaysWeather.secondDay.forecast}"),
+                            Text(
+                                " ${_4DaysWeather.secondDay.temperature}" +
+                                    String.fromCharCodes(Runes('\u00B0')) +
+                                    "C",
+                                style: TextStyle(fontSize: 16)),
+                          ],
+                        )),
+                    Card(
+                        margin: EdgeInsets.only(bottom: 10),
+                        color: Colors.green[200],
+                        child: Column(
+                          children: [
+                            Text(" ${_4DaysWeather.thirdDay.datetime}",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold)),
+                            Text(" ${_4DaysWeather.thirdDay.forecast}"),
+                            Text(
+                                " ${_4DaysWeather.thirdDay.temperature}" +
+                                    String.fromCharCodes(Runes('\u00B0')) +
+                                    "C",
+                                style: TextStyle(fontSize: 16)),
+                          ],
+                        )),
+                    Card(
+                        margin: EdgeInsets.only(bottom: 10),
+                        color: Colors.green[200],
+                        child: Column(
+                          children: [
+                            Text(" ${_4DaysWeather.forthDay.datetime}",
+                                style: TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.bold)),
+                            Text(" ${_4DaysWeather.forthDay.forecast}"),
+                            Text(
+                                " ${_4DaysWeather.forthDay.temperature}" +
+                                    String.fromCharCodes(Runes('\u00B0')) +
+                                    "C",
+                                style: TextStyle(fontSize: 16)),
+                          ],
+                        )),
+                  ])
+            ],
           ),
-          infoCard(context, infoPosition, currentPost),
-        ],
+        ),
       ),
     );
   }
-
-  Future<Uint8List> getBytesFromAsset(String path, int width) async {
-    ByteData data = await rootBundle.load(path);
-    ui.Codec codec = await ui.instantiateImageCodec(data.buffer.asUint8List(),
-        targetWidth: width);
-    ui.FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ui.ImageByteFormat.png))
-        .buffer
-        .asUint8List();
-  }
-}
-
-Widget infoCard(context, double position, Post p) {
-  if (p == null) {
-    return Text("check your internet");
-  }
-  return AnimatedPositioned(
-      bottom: position,
-      right: 0,
-      left: 0,
-      duration: Duration(milliseconds: 200),
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Container(
-          margin: EdgeInsets.all(20),
-          height: 70,
-          decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.all(Radius.circular(50)),
-              boxShadow: <BoxShadow>[
-                BoxShadow(
-                    blurRadius: 20,
-                    offset: Offset.zero,
-                    color: Colors.grey.withOpacity(0.5))
-              ]),
-          child: Material(
-            color: Colors.transparent,
-            child: InkWell(
-              onTap: () {
-                Navigator.push(context, ScaleRoute(page: Detail(post: p)));
-              },
-              splashColor: Colors.green,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    width: 50,
-                    height: 50,
-                    margin: EdgeInsets.only(left: 10),
-                    color: Colors.redAccent,
-                  ),
-                  Expanded(
-                    child: Container(
-                      margin: EdgeInsets.only(left: 20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(p.title),
-                          Text(DateFormat('yyyy-MM-dd').format(
-                              DateTime.fromMicrosecondsSinceEpoch(
-                                  p.timeOfCreation))),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: 50,
-                    height: 50,
-                    margin: EdgeInsets.only(right: 20),
-                    child: Icon(
-                      Icons.arrow_right_alt_rounded,
-                      size: 50.0,
-                      color: Colors.green,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ));
-}
-
-class ScaleRoute extends PageRouteBuilder {
-  final Widget page;
-  ScaleRoute({this.page})
-      : super(
-          pageBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-          ) =>
-              page,
-          transitionsBuilder: (
-            BuildContext context,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-            Widget child,
-          ) =>
-              ScaleTransition(
-            scale: Tween<double>(
-              begin: 0.0,
-              end: 1.0,
-            ).animate(
-              CurvedAnimation(
-                parent: animation,
-                //curve: Curves.fastOutSlowIn,
-                curve: Curves.ease,
-              ),
-            ),
-            child: child,
-          ),
-        );
 }

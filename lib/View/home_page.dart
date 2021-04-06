@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
   final _pageOption = [
     ViewDengueMap(),
     ViewPost(),
-    ViewPostMap(),
+    MainPage(),
     ViewPost(),
     ProfileView()
   ];
@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
     return new Scaffold(
       backgroundColor: Colors.white10,
       appBar: new AppBar(
-        title: Text("MosQUITo",textAlign: TextAlign.center),
+        title: Text("MosQUITo", textAlign: TextAlign.center),
         actions: [
           FlatButton(
             onPressed: _signOut,
@@ -63,13 +63,15 @@ class _HomePageState extends State<HomePage> {
       bottomNavigationBar: ConvexAppBar(
         items: [
           TabItem(icon: Icons.map, title: 'map'),
-          TabItem(icon: Icons.note_add, title:'posts'),
+          TabItem(icon: Icons.note_add, title: 'posts'),
           TabItem(
-            icon: Icons.home,
-            activeIcon: Image.asset("images/logo.png", color: Colors.blue,),
-            title: "Home",
-            isIconBlend: true
-          ),
+              icon: Icons.home,
+              activeIcon: Image.asset(
+                "images/logo.png",
+                color: Colors.blue,
+              ),
+              title: "Home",
+              isIconBlend: true),
           TabItem(icon: Icons.group, title: 'community'),
           TabItem(icon: Icons.person, title: 'profile'),
         ],
