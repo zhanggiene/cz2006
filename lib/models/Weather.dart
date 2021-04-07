@@ -4,7 +4,6 @@ class Weather2Hour {
   Weather2Hour({this.forecast});
 
   factory Weather2Hour.fromJson(Map<String, dynamic> json) {
-    // print(json['items'][0]['forecasts'][3]);
     return Weather2Hour(
       forecast: json['items'][0]['forecasts'][3]['forecast'],
     );
@@ -13,19 +12,21 @@ class Weather2Hour {
 
 class Weather24Hour {
   dynamic forecast;
-  dynamic humidity;
-  dynamic temperature;
+  dynamic temperatureLow;
+  dynamic temperatureHigh;
   dynamic datetime;
 
   Weather24Hour(
-      {this.forecast, this.humidity, this.temperature, this.datetime});
+      {this.forecast,
+      this.temperatureLow,
+      this.temperatureHigh,
+      this.datetime});
 
   factory Weather24Hour.fromJson(Map<String, dynamic> json) {
-    // print(json['items'][0]['general']);
     return Weather24Hour(
         forecast: json['items'][0]['general']['forecast'],
-        humidity: json['items'][0]['general']['relative_humidity']['high'],
-        temperature: json['items'][0]['general']['temperature']['high']);
+        temperatureLow: json['items'][0]['general']['temperature']['low'],
+        temperatureHigh: json['items'][0]['general']['temperature']['high']);
   }
 }
 
@@ -38,7 +39,6 @@ class Weather4Days {
   Weather4Days({this.firstDay, this.secondDay, this.thirdDay, this.forthDay});
 
   factory Weather4Days.fromJson(Map<String, dynamic> json) {
-    // print(json['items'][0]['forecasts'][0]);
     dynamic first = json['items'][0]['forecasts'][0];
     dynamic second = json['items'][0]['forecasts'][1];
     dynamic third = json['items'][0]['forecasts'][2];
@@ -56,26 +56,26 @@ class Weather4Days {
     return Weather4Days(
       firstDay: Weather24Hour(
         forecast: first['forecast'],
-        humidity: first['relative_humidity']['high'],
-        temperature: first['temperature']['high'],
+        temperatureLow: first['temperature']['low'],
+        temperatureHigh: first['temperature']['high'],
         datetime: weekday[DateTime.parse(first['timestamp']).weekday.toInt()],
       ),
       secondDay: Weather24Hour(
         forecast: second['forecast'],
-        humidity: second['relative_humidity']['high'],
-        temperature: second['temperature']['high'],
+        temperatureLow: second['temperature']['low'],
+        temperatureHigh: second['temperature']['high'],
         datetime: weekday[DateTime.parse(second['timestamp']).weekday.toInt()],
       ),
       thirdDay: Weather24Hour(
         forecast: third['forecast'],
-        humidity: third['relative_humidity']['high'],
-        temperature: third['temperature']['high'],
+        temperatureLow: third['temperature']['low'],
+        temperatureHigh: third['temperature']['high'],
         datetime: weekday[DateTime.parse(third['timestamp']).weekday.toInt()],
       ),
       forthDay: Weather24Hour(
         forecast: forth['forecast'],
-        humidity: forth['relative_humidity']['high'],
-        temperature: forth['temperature']['high'],
+        temperatureLow: forth['temperature']['low'],
+        temperatureHigh: forth['temperature']['high'],
         datetime: weekday[DateTime.parse(forth['timestamp']).weekday.toInt()],
       ),
     );
