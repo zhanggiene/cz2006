@@ -203,19 +203,7 @@ class _ProfileViewState extends State<ProfileView> {
                                   padding: EdgeInsets.symmetric(horizontal: 43),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20))),
-                              RaisedButton(
-                                  onPressed: () {},
-                                  color: Colors.green,
-                                  child: Text(
-                                    "   ADD FOGGING   ",
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        letterSpacing: 2.2,
-                                        color: Colors.white),
-                                  ),
-                                  padding: EdgeInsets.symmetric(horizontal: 43),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)))
+                             
                             ],
                           )
                   ],

@@ -37,8 +37,10 @@ class _ViewPostState extends State<ViewPost> {
   Widget build(BuildContext context) {
     return new Scaffold(
         appBar: AppBar(
-          iconTheme: IconThemeData(color: Colors.amber),
-          title: Text('profile'),
+          centerTitle: true,
+          iconTheme: IconThemeData(color: Colors.red),
+          title: const Text('BREEDING GROUND POSTS', style: TextStyle(
+    color: Colors.black)),
           backgroundColor: Colors.white,
         ),
         body: loading

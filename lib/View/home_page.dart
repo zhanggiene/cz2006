@@ -2,6 +2,7 @@ import 'package:cz2006/View/CreatePost.dart';
 import 'package:cz2006/View/Profile_view.dart';
 import 'package:cz2006/View/Report_Bite.dart';
 import 'package:cz2006/View/ViewPost.dart';
+import 'package:cz2006/View/Mainpage.dart';
 import 'package:cz2006/View/ViewPostMap.dart';
 import 'package:cz2006/View/ViewPostMap2.dart';
 import 'package:cz2006/controller/auth_servcie.dart';
@@ -34,7 +35,7 @@ class _HomePageState extends State<HomePage> {
     ViewDengueMap(),
     ViewPost(),
     MainPage(),
-    ViewPost(),
+    ViewPostMap(),
     ProfileView()
   ];
 
