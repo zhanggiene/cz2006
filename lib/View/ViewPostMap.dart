@@ -23,8 +23,13 @@ class _MainPageState extends State<MainPage> {
 
   Future<List<Object>> fetchWeather() async {
     _2HourWeather = await fetchWeather2Hour();
-    _4DaysWeather = await fetchWeather4Days();
-    return [_2HourWeather, _4DaysWeather];
+    _24HourWeather = await fetchWeather24Hour();
+    // _4DaysWeather = await fetchWeather4Days();
+    return [
+      _2HourWeather,
+      _24HourWeather,
+      // _4DaysWeather,
+    ];
   }
 
   Future<Weather2Hour> fetchWeather2Hour() async {
@@ -32,6 +37,16 @@ class _MainPageState extends State<MainPage> {
         Uri.https('api.data.gov.sg', 'v1/environment/2-hour-weather-forecast'));
     if (response.statusCode == 200) {
       return Weather2Hour.fromJson(jsonDecode(response.body));
+    } else {
+      print(response.statusCode);
+    }
+  }
+
+  Future<Weather24Hour> fetchWeather24Hour() async {
+    final response = await http.get(Uri.https(
+        'api.data.gov.sg', 'v1/environment/24-hour-weather-forecast'));
+    if (response.statusCode == 200) {
+      return Weather24Hour.fromJson(jsonDecode(response.body));
     } else {
       print(response.statusCode);
     }
@@ -59,7 +74,8 @@ class _MainPageState extends State<MainPage> {
                 child: Center(child: CircularProgressIndicator()));
           } else {
             _2HourWeather = snapshot.data[0];
-            _4DaysWeather = snapshot.data[1];
+            _24HourWeather = snapshot.data[1];
+            // _4DaysWeather = snapshot.data[1];
             return Scaffold(
               body: Padding(
                 padding: const EdgeInsets.only(
@@ -196,6 +212,7 @@ class _MainPageState extends State<MainPage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            // 2 hour nowcast
                             Card(
                                 margin: EdgeInsets.only(bottom: 10),
                                 color: Colors.green[200],
@@ -226,158 +243,200 @@ class _MainPageState extends State<MainPage> {
                                     ],
                                   ),
                                 )),
+                            // 24 hour forecast
                             Card(
                                 margin: EdgeInsets.only(bottom: 10),
                                 color: Colors.green[200],
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    SizedBox(width: 10),
-                                    Image.asset(
-                                      WeatherController().imageFromForecast(
-                                          _4DaysWeather.firstDay.forecast),
-                                      width: 50,
-                                    ),
-                                    SizedBox(width: 20),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            "${_4DaysWeather.firstDay.datetime}",
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold)),
-                                        Text(
-                                            "${_4DaysWeather.firstDay.forecast}"),
-                                        Text(
-                                            "${_4DaysWeather.firstDay.temperatureLow}" +
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 2.0, bottom: 2.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(width: 10),
+                                      Image.asset(
+                                        WeatherController().imageFromForecast(
+                                            _24HourWeather.forecast),
+                                        width: 50,
+                                      ),
+                                      SizedBox(width: 20),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("Tomorrow forecast",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold)),
+                                          Text("${_24HourWeather?.forecast}"),
+                                          Text(
+                                            "${_24HourWeather.temperatureLow}" +
                                                 String.fromCharCodes(
                                                     Runes('\u00B0')) +
                                                 "C - " +
-                                                "${_4DaysWeather.firstDay.temperatureHigh}" +
+                                                "${_24HourWeather.temperatureHigh}" +
                                                 String.fromCharCodes(
                                                     Runes('\u00B0')) +
                                                 "C",
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    )
-                                  ],
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 )),
-                            Card(
-                                margin: EdgeInsets.only(bottom: 10),
-                                color: Colors.green[200],
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    SizedBox(width: 10),
-                                    Image.asset(
-                                      WeatherController().imageFromForecast(
-                                          _4DaysWeather.firstDay.forecast),
-                                      width: 50,
-                                    ),
-                                    SizedBox(width: 20),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            "${_4DaysWeather.secondDay.datetime}",
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold)),
-                                        Text(
-                                            "${_4DaysWeather.secondDay.forecast}"),
-                                        Text(
-                                            "${_4DaysWeather.secondDay.temperatureLow}" +
-                                                String.fromCharCodes(
-                                                    Runes('\u00B0')) +
-                                                "C - " +
-                                                "${_4DaysWeather.secondDay.temperatureHigh}" +
-                                                String.fromCharCodes(
-                                                    Runes('\u00B0')) +
-                                                "C",
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    ),
-                                  ],
-                                )),
-                            Card(
-                                margin: EdgeInsets.only(bottom: 10),
-                                color: Colors.green[200],
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    SizedBox(width: 10),
-                                    Image.asset(
-                                      WeatherController().imageFromForecast(
-                                          _4DaysWeather.firstDay.forecast),
-                                      width: 50,
-                                    ),
-                                    SizedBox(width: 20),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            "${_4DaysWeather.thirdDay.datetime}",
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold)),
-                                        Text(
-                                            "${_4DaysWeather.thirdDay.forecast}"),
-                                        Text(
-                                            "${_4DaysWeather.thirdDay.temperatureLow}" +
-                                                String.fromCharCodes(
-                                                    Runes('\u00B0')) +
-                                                "C - " +
-                                                "${_4DaysWeather.thirdDay.temperatureHigh}" +
-                                                String.fromCharCodes(
-                                                    Runes('\u00B0')) +
-                                                "C",
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    ),
-                                  ],
-                                )),
-                            Card(
-                                margin: EdgeInsets.only(bottom: 10),
-                                color: Colors.green[200],
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    SizedBox(width: 10),
-                                    Image.asset(
-                                      WeatherController().imageFromForecast(
-                                          _4DaysWeather.firstDay.forecast),
-                                      width: 50,
-                                    ),
-                                    SizedBox(width: 20),
-                                    Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                            "${_4DaysWeather.forthDay.datetime}",
-                                            style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold)),
-                                        Text(
-                                            "${_4DaysWeather.forthDay.forecast}"),
-                                        Text(
-                                            "${_4DaysWeather.forthDay.temperatureLow}" +
-                                                String.fromCharCodes(
-                                                    Runes('\u00B0')) +
-                                                "C - " +
-                                                "${_4DaysWeather.forthDay.temperatureHigh}" +
-                                                String.fromCharCodes(
-                                                    Runes('\u00B0')) +
-                                                "C",
-                                            style: TextStyle(fontSize: 16)),
-                                      ],
-                                    ),
-                                  ],
-                                )),
+                            // 4 days forecast
+                            // Card(
+                            //     margin: EdgeInsets.only(bottom: 10),
+                            //     color: Colors.green[200],
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.start,
+                            //       children: [
+                            //         SizedBox(width: 10),
+                            //         Image.asset(
+                            //           WeatherController().imageFromForecast(
+                            //               _4DaysWeather.firstDay.forecast),
+                            //           width: 50,
+                            //         ),
+                            //         SizedBox(width: 20),
+                            //         Column(
+                            //           crossAxisAlignment:
+                            //               CrossAxisAlignment.start,
+                            //           children: [
+                            //             Text(
+                            //                 "${_4DaysWeather.firstDay.datetime}",
+                            //                 style: TextStyle(
+                            //                     fontSize: 16,
+                            //                     fontWeight: FontWeight.bold)),
+                            //             Text(
+                            //                 "${_4DaysWeather.firstDay.forecast}"),
+                            //             Text(
+                            //                 "${_4DaysWeather.firstDay.temperatureLow}" +
+                            //                     String.fromCharCodes(
+                            //                         Runes('\u00B0')) +
+                            //                     "C - " +
+                            //                     "${_4DaysWeather.firstDay.temperatureHigh}" +
+                            //                     String.fromCharCodes(
+                            //                         Runes('\u00B0')) +
+                            //                     "C",
+                            //                 style: TextStyle(fontSize: 16)),
+                            //           ],
+                            //         )
+                            //       ],
+                            //     )),
+                            // Card(
+                            //     margin: EdgeInsets.only(bottom: 10),
+                            //     color: Colors.green[200],
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.start,
+                            //       children: [
+                            //         SizedBox(width: 10),
+                            //         Image.asset(
+                            //           WeatherController().imageFromForecast(
+                            //               _4DaysWeather.firstDay.forecast),
+                            //           width: 50,
+                            //         ),
+                            //         SizedBox(width: 20),
+                            //         Column(
+                            //           crossAxisAlignment:
+                            //               CrossAxisAlignment.start,
+                            //           children: [
+                            //             Text(
+                            //                 "${_4DaysWeather.secondDay.datetime}",
+                            //                 style: TextStyle(
+                            //                     fontSize: 16,
+                            //                     fontWeight: FontWeight.bold)),
+                            //             Text(
+                            //                 "${_4DaysWeather.secondDay.forecast}"),
+                            //             Text(
+                            //                 "${_4DaysWeather.secondDay.temperatureLow}" +
+                            //                     String.fromCharCodes(
+                            //                         Runes('\u00B0')) +
+                            //                     "C - " +
+                            //                     "${_4DaysWeather.secondDay.temperatureHigh}" +
+                            //                     String.fromCharCodes(
+                            //                         Runes('\u00B0')) +
+                            //                     "C",
+                            //                 style: TextStyle(fontSize: 16)),
+                            //           ],
+                            //         ),
+                            //       ],
+                            //     )),
+                            // Card(
+                            //     margin: EdgeInsets.only(bottom: 10),
+                            //     color: Colors.green[200],
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.start,
+                            //       children: [
+                            //         SizedBox(width: 10),
+                            //         Image.asset(
+                            //           WeatherController().imageFromForecast(
+                            //               _4DaysWeather.firstDay.forecast),
+                            //           width: 50,
+                            //         ),
+                            //         SizedBox(width: 20),
+                            //         Column(
+                            //           crossAxisAlignment:
+                            //               CrossAxisAlignment.start,
+                            //           children: [
+                            //             Text(
+                            //                 "${_4DaysWeather.thirdDay.datetime}",
+                            //                 style: TextStyle(
+                            //                     fontSize: 16,
+                            //                     fontWeight: FontWeight.bold)),
+                            //             Text(
+                            //                 "${_4DaysWeather.thirdDay.forecast}"),
+                            //             Text(
+                            //                 "${_4DaysWeather.thirdDay.temperatureLow}" +
+                            //                     String.fromCharCodes(
+                            //                         Runes('\u00B0')) +
+                            //                     "C - " +
+                            //                     "${_4DaysWeather.thirdDay.temperatureHigh}" +
+                            //                     String.fromCharCodes(
+                            //                         Runes('\u00B0')) +
+                            //                     "C",
+                            //                 style: TextStyle(fontSize: 16)),
+                            //           ],
+                            //         ),
+                            //       ],
+                            //     )),
+                            // Card(
+                            //     margin: EdgeInsets.only(bottom: 10),
+                            //     color: Colors.green[200],
+                            //     child: Row(
+                            //       mainAxisAlignment: MainAxisAlignment.start,
+                            //       children: [
+                            //         SizedBox(width: 10),
+                            //         Image.asset(
+                            //           WeatherController().imageFromForecast(
+                            //               _4DaysWeather.firstDay.forecast),
+                            //           width: 50,
+                            //         ),
+                            //         SizedBox(width: 20),
+                            //         Column(
+                            //           crossAxisAlignment:
+                            //               CrossAxisAlignment.start,
+                            //           children: [
+                            //             Text(
+                            //                 "${_4DaysWeather.forthDay.datetime}",
+                            //                 style: TextStyle(
+                            //                     fontSize: 16,
+                            //                     fontWeight: FontWeight.bold)),
+                            //             Text(
+                            //                 "${_4DaysWeather.forthDay.forecast}"),
+                            //             Text(
+                            //                 "${_4DaysWeather.forthDay.temperatureLow}" +
+                            //                     String.fromCharCodes(
+                            //                         Runes('\u00B0')) +
+                            //                     "C - " +
+                            //                     "${_4DaysWeather.forthDay.temperatureHigh}" +
+                            //                     String.fromCharCodes(
+                            //                         Runes('\u00B0')) +
+                            //                     "C",
+                            //                 style: TextStyle(fontSize: 16)),
+                            //           ],
+                            //         ),
+                            //       ],
+                            //     )),
                           ])
                     ],
                   ),
