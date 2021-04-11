@@ -133,7 +133,7 @@ class _DetailState extends State<Detail> {
                       initialCameraPosition: CameraPosition(
                         target: LatLng(widget.post.location.latitude,
                             widget.post.location.longitude),
-                        zoom: 20,
+                        zoom: 10,
                       ),
                       onMapCreated: (GoogleMapController controller) {
                         _controller.complete(controller);

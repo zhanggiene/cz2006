@@ -53,9 +53,7 @@ class _ProfileViewState extends State<ProfileView> {
                     Text("Edit Profile",
                         style: TextStyle(
                             fontSize: 25, fontWeight: FontWeight.w500)),
-                    SizedBox(
-                      height: 15,
-                    ),
+                    SizedBox(height: 15),
                     // Text(currentUser.name),
                     ProfileImage(
                       url: currentUser?.imageURL,
@@ -203,19 +201,6 @@ class _ProfileViewState extends State<ProfileView> {
                                   padding: EdgeInsets.symmetric(horizontal: 43),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(20))),
-                              RaisedButton(
-                                  onPressed: () {},
-                                  color: Colors.green,
-                                  child: Text(
-                                    "   ADD FOGGING   ",
-                                    style: TextStyle(
-                                        fontSize: 14,
-                                        letterSpacing: 2.2,
-                                        color: Colors.white),
-                                  ),
-                                  padding: EdgeInsets.symmetric(horizontal: 43),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(20)))
                             ],
                           )
                   ],

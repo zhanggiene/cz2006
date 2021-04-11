@@ -23,6 +23,7 @@ class PostController {
 
   Future<void> uploadPosts(List<File> images) async {
     for (var i = 0; i < images.length; i++) {
+      // print(images[i].uri);
       _post.images.add(await _storageService.uploadPostImage(images[i]));
     }
 
@@ -56,7 +57,6 @@ class PostController {
     _postsCollectionReference.document(post.id).delete();
     //postDeleted(post); // call back function.
   }
-  
 
   void likePost(User a, Post post) {
     post.addLikedUserId(a.UserId);
@@ -64,8 +64,6 @@ class PostController {
     var variable = Firestore.instance.collection('users').document(a.UserId);
     variable.updateData({"likedNum": FieldValue.increment(1)});
   }
-
-
 
   Future<List<Post>> getPostByTime() async {
     QuerySnapshot snapshot = await _postsCollectionReference.getDocuments();

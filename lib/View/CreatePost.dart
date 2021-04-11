@@ -51,176 +51,150 @@ class _UploadPhotoPageState extends State<UploadPhotoPage> {
         title: new Text("upload Post"),
         centerTitle: true,
       ),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            RaisedButton(
-              child: Text("Pick images"),
-              onPressed: pickImages,
-            ),
-            Flexible(
-              child: GridView.count(
-                crossAxisCount: 3,
-                children: List.generate(images.length, (index) {
-                  print(index);
-                  Asset asset = images[index];
-                  return AssetThumb(
-                    asset: asset,
-                    width: 300,
-                    height: 300,
-                  );
-                }),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              RaisedButton(
+                child: Text("Pick images"),
+                onPressed: pickImages,
               ),
-            ),
-            RaisedButton(
-              child: Text("Load Google Map"),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return PlacePicker(
-                        apiKey: "AIzaSyCVNX_dr0ebA4zmzokVUxcizwN1NRdifcI",
-                        initialPosition: LatLng(1.3521, 103.8198),
-                        useCurrentLocation: true,
-                        selectInitialPosition: true,
-                        enableMyLocationButton: true,
-                        forceAndroidLocationManager: true,
+              Flexible(
+                child: GridView.count(
+                  crossAxisCount: 3,
+                  children: List.generate(images.length, (index) {
+                    Asset asset = images[index];
+                    return AssetThumb(
+                      asset: asset,
+                      width: 300,
+                      height: 300,
+                    );
+                  }),
+                ),
+              ),
+              RaisedButton(
+                child: Text("Load Google Map"),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return PlacePicker(
+                          apiKey: "AIzaSyCVNX_dr0ebA4zmzokVUxcizwN1NRdifcI",
+                          initialPosition: LatLng(1.3521, 103.8198),
+                          useCurrentLocation: true,
+                          selectInitialPosition: true,
+                          enableMyLocationButton: true,
+                          forceAndroidLocationManager: true,
 
-                        //usePlaceDetailSearch: true,
-                        onPlacePicked: (result) {
-                          selectedPlace = result;
-                          Navigator.of(context).pop();
-                          setState(() {});
-                        },
+                          //usePlaceDetailSearch: true,
+                          onPlacePicked: (result) {
+                            selectedPlace = result;
+                            Navigator.of(context).pop();
+                            setState(() {});
+                          },
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
+              selectedPlace == null
+                  ? Container()
+                  : Text(selectedPlace.formattedAddress ?? ""),
+              TextFormField(
+                  decoration: InputDecoration(labelText: "Title"),
+                  keyboardType: TextInputType.text,
+                  style: TextStyle(fontSize: 20),
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return "title is required";
+                    }
+                    return null;
+                  },
+                  onSaved: (String value) {
+                    _post.title = value;
+                  }),
+              TextFormField(
+                  decoration: InputDecoration(labelText: "Description"),
+                  keyboardType: TextInputType.text,
+                  style: TextStyle(fontSize: 20),
+                  validator: (String value) {
+                    if (value.isEmpty) {
+                      return "description  is required";
+                    }
+                    return null;
+                  },
+                  onSaved: (String value) {
+                    _post.content = value;
+                  }),
+              ButtonTheme(
+                minWidth: 400.0,
+                height: 100.0,
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState.validate()) {
+                      _formKey.currentState.save();
+                      _post.userID = currentUser.UserId;
+                      _post.location = new LatLng(
+                          selectedPlace.geometry.location.lat,
+                          selectedPlace.geometry.location.lng);
+                      // upload post
+                      //locator
+                      locator
+                          .get<PostController>()
+                          .uploadPosts(fileImageArray)
+                          .then((value) {
+                        fileImageArray.clear();
 
-                        //forceSearchOnZoomChanged: true,
-                        //automaticallyImplyAppBarLeading: false,
-                        //autocompleteLanguage: "ko",
-                        //region: 'au',
-                        //selectInitialPosition: true,
-                        // selectedPlaceWidgetBuilder: (_, selectedPlace, state, isSearchBarFocused) {
-                        //   print("state: $state, isSearchBarFocused: $isSearchBarFocused");
-                        //   return isSearchBarFocused
-                        //       ? Container()
-                        //       : FloatingCard(
-                        //           bottomPosition: 0.0, // MediaQuery.of(context) will cause rebuild. See MediaQuery document for the information.
-                        //           leftPosition: 0.0,
-                        //           rightPosition: 0.0,
-                        //           width: 500,
-                        //           borderRadius: BorderRadius.circular(12.0),
-                        //           child: state == SearchingState.Searching
-                        //               ? Center(child: CircularProgressIndicator())
-                        //               : RaisedButton(
-                        //                   child: Text("Pick Here"),
-                        //                   onPressed: () {
-                        //                     // IMPORTANT: You MUST manage selectedPlace data yourself as using this build will not invoke onPlacePicker as
-                        //                     //            this will override default 'Select here' Button.
-                        //                     print("do something with [selectedPlace] data");
-                        //                     Navigator.of(context).pop();
-                        //                   },
-                        //                 ),
-                        //         );
-                        // },
-                        // pinBuilder: (context, state) {
-                        //   if (state == PinState.Idle) {
-                        //     return Icon(Icons.favorite_border);
-                        //   } else {
-                        //     return Icon(Icons.favorite);
-                        //   }
-                        // },
-                      );
-                    },
-                  ),
-                );
-              },
-            ),
-            selectedPlace == null
-                ? Container()
-                : Text(selectedPlace.formattedAddress ?? ""),
-            TextFormField(
-                decoration: InputDecoration(labelText: "Title"),
-                keyboardType: TextInputType.text,
-                style: TextStyle(fontSize: 20),
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return "title is required";
-                  }
-                  return null;
-                },
-                onSaved: (String value) {
-                  print("hi");
-                  _post.title = value;
-                }),
-            TextFormField(
-                decoration: InputDecoration(labelText: "Description"),
-                keyboardType: TextInputType.text,
-                style: TextStyle(fontSize: 20),
-                validator: (String value) {
-                  if (value.isEmpty) {
-                    return "description  is required";
-                  }
-                  return null;
-                },
-                onSaved: (String value) {
-                  print("hi from description");
-                  _post.content = value;
-                }),
-            ElevatedButton(
-              onPressed: () {
-                if (_formKey.currentState.validate()) {
-                  _formKey.currentState.save();
-                  _post.userID = currentUser.UserId;
-                  _post.location = new LatLng(selectedPlace.geometry.location.lat,selectedPlace.geometry.location.lng);
-                  // upload post 
-                   //locator
-                  locator
-                      .get<PostController>()
-                      .uploadPosts(fileImageArray)
-                      .then((value) => locator
-                          .get<UserController>()
-                          .updateCoins(10)
-                          .then((value) => {
-                                AwesomeDialog(
-                                    context: context,
-                                    animType: AnimType.LEFTSLIDE,
-                                    headerAnimationLoop: false,
-                                    dialogType: DialogType.SUCCES,
-                                    body: Center(
-                                        child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceEvenly,
-                                      children: [
-                                        Text(
-                                          'You have made a post!',
-                                          style: TextStyle(
-                                              fontSize: 26.0,
-                                              fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(
-                                          'You have earned 10 points',
-                                          style: TextStyle(
-                                              fontStyle: FontStyle.italic),
-                                        ),
-                                      ],
-                                    )),
-                                    btnOkOnPress: () {
-                                      debugPrint('OnClcik');
-                                      Navigator.pop(context);
-                                    },
-                                    btnOkIcon: Icons.check_circle,
-                                    onDissmissCallback: () {
-                                      debugPrint(
-                                          'Dialog Dissmiss from callback');
-                                    })
-                                  ..show()
-                              }));
-                }
-              },
-              child: new Text("Post"),
-            ),
-          ],
+                        return locator
+                            .get<UserController>()
+                            .updateCoins(10)
+                            .then((value) => {
+                                  AwesomeDialog(
+                                      context: context,
+                                      animType: AnimType.LEFTSLIDE,
+                                      headerAnimationLoop: false,
+                                      dialogType: DialogType.SUCCES,
+                                      body: Center(
+                                          child: Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
+                                        children: [
+                                          Text(
+                                            'You have made a post!',
+                                            style: TextStyle(
+                                                fontSize: 26.0,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          Text(
+                                            'You have earned 10 points',
+                                            style: TextStyle(
+                                                fontStyle: FontStyle.italic),
+                                          ),
+                                        ],
+                                      )),
+                                      btnOkOnPress: () {
+                                        debugPrint('OnClick');
+                                        Navigator.pop(context);
+                                      },
+                                      btnOkIcon: Icons.check_circle,
+                                      onDissmissCallback: () {
+                                        debugPrint(
+                                            'Dialog Dissmiss from callback');
+                                      })
+                                    ..show()
+                                });
+                      });
+                    }
+                  },
+                  child: new Text("Post"),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
