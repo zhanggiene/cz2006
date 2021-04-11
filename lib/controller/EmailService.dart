@@ -8,18 +8,17 @@ import 'package:cz2006/models/User.dart';
 
 class EmailService {
   void sendMail(User user, Coupon coupon) async {
-    String username = 'hannakim.bi131@gmail.com';
-    // String password = 'pokemonsaikou01!';
-    String password = 'ikon2015';
+    String username = 'cz2006.pokemon@gmail.com';
+    String password = 'pokemonsaikou01!';
 
     String userMail = await AuthenticationServices().getMail();
     int randomNum = (Random().nextDouble() * 1000000).round();
 
     final smtpServer = gmail(username, password);
     final equivalentMessage = Message()
-      ..from = Address(username, 'MosQUITo')
+      ..from = Address(username, 'mosQUITo')
       ..recipients.add(Address(userMail))
-      ..subject = 'MosQUITo | Coupon Redemption'
+      ..subject = 'mosQUITo | Coupon Redemption'
       ..text = "hello"
       ..html = "<p>Dear ${user.name}</p>" +
           "<p>We would like to inform you that you have redeemed this coupon:</p>" +
