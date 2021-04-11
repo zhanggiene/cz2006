@@ -20,15 +20,22 @@ class _MainPageState extends State<MainPage> {
   Weather2Hour _2HourWeather;
   Weather24Hour _24HourWeather;
   Weather4Days _4DaysWeather;
+  int _likedNum;
 
-  Future<List<Object>> fetchWeather() async {
+  Future<int> getLikedNum() async {
+    return await locator.get<UserController>().getLikedNumber();
+  }
+
+  Future<List<Object>> fetchData() async {
     _2HourWeather = await fetchWeather2Hour();
     _24HourWeather = await fetchWeather24Hour();
     // _4DaysWeather = await fetchWeather4Days();
+    _likedNum = await getLikedNum();
     return [
       _2HourWeather,
       _24HourWeather,
       // _4DaysWeather,
+      _likedNum,
     ];
   }
 
@@ -64,9 +71,9 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    fetchWeather();
+    fetchData();
     return FutureBuilder<List<Object>>(
-        future: fetchWeather(),
+        future: fetchData(),
         builder: (context, AsyncSnapshot<List<Object>> snapshot) {
           if (!snapshot.hasData) {
             return Container(
@@ -76,6 +83,7 @@ class _MainPageState extends State<MainPage> {
             _2HourWeather = snapshot.data[0];
             _24HourWeather = snapshot.data[1];
             // _4DaysWeather = snapshot.data[1];
+            _likedNum = snapshot.data[2];
             return Scaffold(
               body: Padding(
                 padding: const EdgeInsets.only(
@@ -89,8 +97,27 @@ class _MainPageState extends State<MainPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Image.asset("images/biglogo.png"),
-                          Text("   Hello ${currentUser.name}!",
-                              style: TextStyle(fontSize: 16)),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("  Hello ${currentUser.name}!",
+                                  style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold)),
+                              Row(
+                                children: [
+                                  Text(
+                                      "  Your posts have received ${_likedNum} ",
+                                      style: TextStyle(fontSize: 16)),
+                                  Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                    size: 24.0,
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                       // Singapore reports

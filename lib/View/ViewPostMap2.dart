@@ -3,6 +3,7 @@ import 'dart:collection';
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cz2006/controller/PostController.dart';
 import 'package:cz2006/locator.dart';
 import 'package:cz2006/models/Cluster.dart';
@@ -16,7 +17,6 @@ import 'dart:ui' as ui;
 import 'package:html/parser.dart' show parse;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:shape_of_view/shape_of_view.dart';
-
 
 class ViewDengueMap extends StatefulWidget {
   ViewDengueMap({Key key}) : super(key: key);
@@ -193,46 +193,124 @@ Widget infoCard(context, double position, Cluster p) {
   if (p == null) {
     return Text("check your internet");
   }
-    return AnimatedPositioned(
-        bottom: position,
-        right: 0,
-        left: 0,
-        duration: Duration(milliseconds: 300),
-        child: Align(
-          alignment: Alignment.bottomCenter,
-          child: Container(
-
-            margin: EdgeInsets.all(20),
-            height: 200,
-            child: ShapeOfView(
-              shape:ArcShape(
-                direction: ArcDirection.Outside,
-                height: 50,
-                position: ArcPosition.Top,
-
-              ),
-
-            
-              child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-
-          Text(p.caseSize.toString()+" cases",style: new TextStyle(fontSize: 30.0,color: Colors.green,fontWeight: FontWeight.bold),),
-          //Text(p.home.toString()),
-          Flexible(child: Text("location: "+p.location.toString())),
-          Flexible(child: Text("home:"+p.home.toString())),
-          Flexible(child: Text("Public places:"+p.public_places.toString())),
-          Flexible(child: Text("Construction:"+p.construction.toString())),
-
-
-
-          
-          
-          
-          ],
-              ),
+  return AnimatedPositioned(
+      bottom: position,
+      right: 0,
+      left: 0,
+      duration: Duration(milliseconds: 300),
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          margin: EdgeInsets.all(20),
+          height: 230,
+          child: ShapeOfView(
+            shape: ArcShape(
+              direction: ArcDirection.Outside,
+              height: 50,
+              position: ArcPosition.Top,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Center(
+                  child: Text(
+                    p.caseSize.toString() + " cases",
+                    style: new TextStyle(
+                        fontSize: 30.0,
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 10),
+                    Text(
+                      'Location: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    ConstrainedBox(
+                        constraints:
+                            BoxConstraints(maxWidth: 295, maxHeight: 30),
+                        child: AutoSizeText(
+                          p.location.toString(),
+                          minFontSize: 11,
+                        )),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 10),
+                    Text(
+                      'Home: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    ConstrainedBox(
+                        constraints:
+                            BoxConstraints(maxWidth: 315, maxHeight: 60),
+                        child: AutoSizeText(
+                          p.home.toString(),
+                          minFontSize: 10,
+                        )),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 10),
+                    Text(
+                      'Public places: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    ConstrainedBox(
+                        constraints:
+                            BoxConstraints(maxWidth: 265, maxHeight: 70),
+                        child: AutoSizeText(
+                          p.public_places.toString(),
+                          minFontSize: 10,
+                        )),
+                  ],
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 10),
+                    Text(
+                      'Construction: ',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    ConstrainedBox(
+                        constraints:
+                            BoxConstraints(maxWidth: 265, maxHeight: 20),
+                        child: AutoSizeText(
+                          p.construction.toString(),
+                          minFontSize: 10,
+                        )),
+                  ],
+                ),
+                //Text(p.home.toString()),
+                // Flexible(child: Text("location: " + p.location.toString())),
+                // ConstrainedBox(
+                //     constraints: BoxConstraints(maxHeight: 30, minHeight: 20),
+                //     child: AutoSizeText("location: " + p.location.toString())),
+                // ConstrainedBox(
+                //     constraints: BoxConstraints(maxHeight: 30, minHeight: 20),
+                //     child: AutoSizeText("home: " + p.home.toString())),
+                // Flexible(child: Text("home:" + p.home.toString())),
+                // ConstrainedBox(
+                //     constraints: BoxConstraints(maxHeight: 30, minHeight: 20),
+                //     child: AutoSizeText(
+                //         "Public places: " + p.public_places.toString())),
+                // Flexible(
+                //     child:
+                //         Text("Public places: " + p.public_places.toString())),
+                // Flexible(
+                //     child: Text("Construction: " + p.construction.toString())),
+              ],
             ),
           ),
-        ));
+        ),
+      ));
 }
