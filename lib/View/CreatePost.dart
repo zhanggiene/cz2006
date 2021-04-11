@@ -147,7 +147,8 @@ class _UploadPhotoPageState extends State<UploadPhotoPage> {
                           .get<PostController>()
                           .uploadPosts(fileImageArray)
                           .then((value) {
-                        fileImageArray = [];
+                        fileImageArray.clear();
+                        print("dispossing the map");
 
                         return locator
                             .get<UserController>()
@@ -202,6 +203,9 @@ class _UploadPhotoPageState extends State<UploadPhotoPage> {
 
   Future<void> pickImages() async {
     List<Asset> resultList = <Asset>[];
+    resultList.clear();
+    fileImageArray.clear();
+    print("file length is ${fileImageArray.length}");
 
     try {
       resultList = await MultiImagePicker.pickImages(
