@@ -63,7 +63,7 @@ class PostController {
   void likePost(User a, Post post) {
     post.addLikedUserId(a.UserId);
     _postsCollectionReference.document(post.id).updateData(post.toJson());
-    var variable = Firestore.instance.collection('users').document(a.UserId);
+    var variable = Firestore.instance.collection('users').document(post.userID);
     variable.updateData({"likedNum": FieldValue.increment(1)});
   }
 
