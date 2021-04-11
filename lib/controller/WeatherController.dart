@@ -4,10 +4,13 @@ class WeatherController {
 
   String imageFromForecast(String forecast) {
     String ans = 'images/weather-cloudy.png';
-    if (forecast.contains('cloudy')) {
+    if (forecast.contains('cloudy') || forecast.contains('Cloudy')) {
       ans = 'images/weather-cloudy.png';
     }
-    if (forecast.contains('rains') || (forecast.contains('showers'))) {
+    if (forecast.contains('rains') ||
+        (forecast.contains('showers')) ||
+        forecast.contains('Rains') ||
+        (forecast.contains('Showers'))) {
       ans = 'images/weather-rain.png';
     }
     if (forecast.contains('thundery showers') ||
