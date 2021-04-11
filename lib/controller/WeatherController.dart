@@ -10,7 +10,8 @@ class WeatherController {
     if (forecast.contains('rains') || (forecast.contains('showers'))) {
       ans = 'images/weather-rain.png';
     }
-    if (forecast.contains('thundery showers')) {
+    if (forecast.contains('thundery showers') ||
+        forecast.contains('Thundery Showers')) {
       ans = 'images/weather-thundery-shower.png';
     }
     return ans;

@@ -23,6 +23,7 @@ class Weather24Hour {
       this.datetime});
 
   factory Weather24Hour.fromJson(Map<String, dynamic> json) {
+    print(json['items'][0]['general']['forecast']);
     return Weather24Hour(
         forecast: json['items'][0]['general']['forecast'],
         temperatureLow: json['items'][0]['general']['temperature']['low'],
