@@ -22,6 +22,8 @@ class PostController {
   Post get post => _post;
 
   Future<void> uploadPosts(List<File> images) async {
+    _post.images.clear();
+    print("file length is ${images.length}");
     for (var i = 0; i < images.length; i++) {
       // print(images[i].uri);
       _post.images.add(await _storageService.uploadPostImage(images[i]));
