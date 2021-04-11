@@ -232,7 +232,7 @@ Widget infoCard(context, double position, Cluster p) {
                     ),
                     ConstrainedBox(
                         constraints:
-                            BoxConstraints(maxWidth: 295, maxHeight: 30),
+                            BoxConstraints(maxWidth: 290, maxHeight: 30),
                         child: AutoSizeText(
                           p.location.toString(),
                           minFontSize: 11,
@@ -249,7 +249,7 @@ Widget infoCard(context, double position, Cluster p) {
                     ),
                     ConstrainedBox(
                         constraints:
-                            BoxConstraints(maxWidth: 315, maxHeight: 60),
+                            BoxConstraints(maxWidth: 310, maxHeight: 60),
                         child: AutoSizeText(
                           p.home.toString(),
                           minFontSize: 10,
@@ -266,7 +266,7 @@ Widget infoCard(context, double position, Cluster p) {
                     ),
                     ConstrainedBox(
                         constraints:
-                            BoxConstraints(maxWidth: 265, maxHeight: 70),
+                            BoxConstraints(maxWidth: 260, maxHeight: 70),
                         child: AutoSizeText(
                           p.public_places.toString(),
                           minFontSize: 10,
@@ -283,7 +283,7 @@ Widget infoCard(context, double position, Cluster p) {
                     ),
                     ConstrainedBox(
                         constraints:
-                            BoxConstraints(maxWidth: 265, maxHeight: 20),
+                            BoxConstraints(maxWidth: 260, maxHeight: 20),
                         child: AutoSizeText(
                           p.construction.toString(),
                           minFontSize: 10,
