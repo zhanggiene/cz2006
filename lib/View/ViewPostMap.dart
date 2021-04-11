@@ -183,7 +183,7 @@ Widget infoCard(context, double position, Post p) {
                     width: 50,
                     height: 50,
                     margin: EdgeInsets.only(left: 10),
-                    color: Colors.redAccent,
+                    color: Colors.white,
                   ),
                   Expanded(
                     child: Container(

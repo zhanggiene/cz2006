@@ -50,7 +50,7 @@ class UserController {
     String usid = await _auth.signUp(email, password, name);
     await _coinsCollectionReference
         .document(usid)
-        .setData({"rewards": 0, "isAdmin": isAdmin});
+        .setData({"rewards": 0, "isAdmin": isAdmin,"likedNum":0});
     _currentUser.isAdmin = isAdmin;
   }
 
@@ -78,6 +78,14 @@ class UserController {
         .document(_currentUser.UserId)
         .get();
     return variable.data['rewards'];
+  }
+
+    Future<int> getLikedNumber() async {
+    DocumentSnapshot variable = await Firestore.instance
+        .collection('users')
+        .document(_currentUser.UserId)
+        .get();
+    return variable.data['likedNum'];
   }
 
   Stream<DocumentSnapshot> get userSnapshot {
