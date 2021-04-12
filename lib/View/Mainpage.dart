@@ -17,6 +17,8 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   User currentUser = locator.get<UserController>().currentuser;
   DateTime now = DateTime.now();
+  WeatherHourly currentWeather;
+  Weather4DaysHourly fourDaysWeather;
   Weather2Hour _2HourWeather;
   Weather24Hour _24HourWeather;
   Weather4Days _4DaysWeather;
@@ -27,13 +29,17 @@ class _MainPageState extends State<MainPage> {
   }
 
   Future<List<Object>> fetchData() async {
-    _2HourWeather = await fetchWeather2Hour();
-    _24HourWeather = await fetchWeather24Hour();
+    // currentWeather = await WeatherController().fetchCurrentWeather();
+    // fourDaysWeather = await WeatherController().fetch4DaysWeather();
+    // _2HourWeather = await fetchWeather2Hour();
+    // _24HourWeather = await fetchWeather24Hour();
     // _4DaysWeather = await fetchWeather4Days();
     _likedNum = await getLikedNum();
     return [
-      _2HourWeather,
-      _24HourWeather,
+      // currentWeather,
+      // fourDaysWeather,
+      // _2HourWeather,
+      // _24HourWeather,
       // _4DaysWeather,
       _likedNum,
     ];
@@ -72,6 +78,7 @@ class _MainPageState extends State<MainPage> {
   @override
   Widget build(BuildContext context) {
     fetchData();
+
     return FutureBuilder<List<Object>>(
         future: fetchData(),
         builder: (context, AsyncSnapshot<List<Object>> snapshot) {
@@ -80,10 +87,12 @@ class _MainPageState extends State<MainPage> {
                 color: Colors.white,
                 child: Center(child: CircularProgressIndicator()));
           } else {
-            _2HourWeather = snapshot.data[0];
-            _24HourWeather = snapshot.data[1];
+            // currentWeather = snapshot.data[0];
+            // fourDaysWeather = snapshot.data[1];
+            // _2HourWeather = snapshot.data[0];
+            // _24HourWeather = snapshot.data[1];
             // _4DaysWeather = snapshot.data[1];
-            _likedNum = snapshot.data[2];
+            _likedNum = snapshot.data[0];
             return Scaffold(
               body: Padding(
                 padding: const EdgeInsets.only(
@@ -239,78 +248,221 @@ class _MainPageState extends State<MainPage> {
                           mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
+                            // manually day 0
+                            Card(
+                                margin: EdgeInsets.only(bottom: 10),
+                                color: Colors.green[200],
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 2.0, bottom: 2.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(width: 20),
+                                      Image.asset(
+                                        'images/cloudy.png',
+                                        width: 50,
+                                        // color: Colors.white,
+                                      ),
+                                      SizedBox(width: 20),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("Today",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold)),
+                                          Text("Clouds"),
+                                          Text("29" +
+                                              String.fromCharCodes(
+                                                  Runes('\u00B0')) +
+                                              "C"),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            // day 1
+                            Card(
+                                margin: EdgeInsets.only(bottom: 10),
+                                color: Colors.green[200],
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 2.0, bottom: 2.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(width: 20),
+                                      Image.asset(
+                                        'images/rain.png',
+                                        width: 50,
+                                        // color: Colors.white,
+                                      ),
+                                      SizedBox(width: 20),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("Tomorrow",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold)),
+                                          Text("Light rain"),
+                                          Text("29" +
+                                              String.fromCharCodes(
+                                                  Runes('\u00B0')) +
+                                              "C"),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                )),
+                            // day 3
+                            Card(
+                                margin: EdgeInsets.only(bottom: 10),
+                                color: Colors.green[200],
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 2.0, bottom: 2.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(width: 20),
+                                      Image.asset(
+                                        'images/rain.png',
+                                        width: 50,
+                                        // color: Colors.white,
+                                      ),
+                                      SizedBox(width: 20),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("Wednesday",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold)),
+                                          Text("Moderate rain"),
+                                          Text("29" +
+                                              String.fromCharCodes(
+                                                  Runes('\u00B0')) +
+                                              "C"),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                )),
+
+                            // day 2
+                            Card(
+                                margin: EdgeInsets.only(bottom: 10),
+                                color: Colors.green[200],
+                                child: Padding(
+                                  padding: const EdgeInsets.only(
+                                      top: 2.0, bottom: 2.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    children: [
+                                      SizedBox(width: 20),
+                                      Image.asset(
+                                        'images/rain.png',
+                                        width: 50,
+                                        // color: Colors.white,
+                                      ),
+                                      SizedBox(width: 20),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text("Thursday",
+                                              style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold)),
+                                          Text("Light rain"),
+                                          Text("29" +
+                                              String.fromCharCodes(
+                                                  Runes('\u00B0')) +
+                                              "C"),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                )),
+
                             // 2 hour nowcast
-                            Card(
-                                margin: EdgeInsets.only(bottom: 10),
-                                color: Colors.green[200],
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 2.0, bottom: 2.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SizedBox(width: 10),
-                                      Image.asset(
-                                        WeatherController().imageFromForecast(
-                                            _2HourWeather.forecast),
-                                        width: 50,
-                                      ),
-                                      SizedBox(width: 20),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text("2-hour nowcast",
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold)),
-                                          Text("${_2HourWeather?.forecast}")
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                )),
+                            // Card(
+                            //     margin: EdgeInsets.only(bottom: 10),
+                            //     color: Colors.green[200],
+                            //     child: Padding(
+                            //       padding: const EdgeInsets.only(
+                            //           top: 2.0, bottom: 2.0),
+                            //       child: Row(
+                            //         mainAxisAlignment: MainAxisAlignment.start,
+                            //         children: [
+                            //           SizedBox(width: 10),
+                            //           // Image.asset(
+                            //           //   WeatherController().imageFromForecast(
+                            //           //       _2HourWeather.forecast),
+                            //           //   width: 50,
+                            //           // ),
+                            //           SizedBox(width: 20),
+                            //           Column(
+                            //             crossAxisAlignment:
+                            //                 CrossAxisAlignment.start,
+                            //             children: [
+                            //               Text("Today ",
+                            //                   style: TextStyle(
+                            //                       fontSize: 16,
+                            //                       fontWeight: FontWeight.bold)),
+                            //               // Text("${currentWeather.forecast}")
+                            //             ],
+                            //           ),
+                            //         ],
+                            //       ),
+                            //     )),
                             // 24 hour forecast
-                            Card(
-                                margin: EdgeInsets.only(bottom: 10),
-                                color: Colors.green[200],
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 2.0, bottom: 2.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      SizedBox(width: 10),
-                                      Image.asset(
-                                        WeatherController().imageFromForecast(
-                                            _24HourWeather.forecast),
-                                        width: 50,
-                                      ),
-                                      SizedBox(width: 20),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Tomorrow forecast",
-                                              style: TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold)),
-                                          Text("${_24HourWeather?.forecast}"),
-                                          Text(
-                                            "${_24HourWeather.temperatureLow}" +
-                                                String.fromCharCodes(
-                                                    Runes('\u00B0')) +
-                                                "C - " +
-                                                "${_24HourWeather.temperatureHigh}" +
-                                                String.fromCharCodes(
-                                                    Runes('\u00B0')) +
-                                                "C",
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                )),
+                            // Card(
+                            //     margin: EdgeInsets.only(bottom: 10),
+                            //     color: Colors.green[200],
+                            //     child: Padding(
+                            //       padding: const EdgeInsets.only(
+                            //           top: 2.0, bottom: 2.0),
+                            //       child: Row(
+                            //         mainAxisAlignment: MainAxisAlignment.start,
+                            //         children: [
+                            //           SizedBox(width: 10),
+                            //           // Image.asset(
+                            //           //   WeatherController().imageFromForecast(
+                            //           //       _24HourWeather.forecast),
+                            //           //   width: 50,
+                            //           // ),
+                            //           SizedBox(width: 20),
+                            //           Column(
+                            //             crossAxisAlignment:
+                            //                 CrossAxisAlignment.start,
+                            //             children: [
+                            //               Text("Tomorrow forecast",
+                            //                   style: TextStyle(
+                            //                       fontSize: 16,
+                            //                       fontWeight: FontWeight.bold)),
+                            //               // Text(
+                            //               //     "${fourDaysWeather.firstDay.forecast}"),
+                            //               // Text(
+                            //               //   "${fourDaysWeather.firstDay.temp_min}" +
+                            //               //       String.fromCharCodes(
+                            //               //           Runes('\u00B0')) +
+                            //               //       "C - " +
+                            //               //       "${fourDaysWeather.firstDay.temp_max}" +
+                            //               //       String.fromCharCodes(
+                            //               //           Runes('\u00B0')) +
+                            //               //       "C",
+                            //               // ),
+                            //             ],
+                            //           ),
+                            //         ],
+                            //       ),
+                            //     )),
                             // 4 days forecast
                             // Card(
                             //     margin: EdgeInsets.only(bottom: 10),

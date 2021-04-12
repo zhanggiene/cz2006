@@ -10,6 +10,83 @@ class Weather2Hour {
   }
 }
 
+class WeatherHourly {
+  dynamic forecast;
+  dynamic iconString;
+  dynamic temp_min;
+  dynamic temp_max;
+  dynamic datetime;
+
+  WeatherHourly(
+      {this.forecast,
+      this.iconString,
+      this.temp_min,
+      this.temp_max,
+      this.datetime});
+
+  factory WeatherHourly.fromJson(Map<String, dynamic> json) {
+    return WeatherHourly(
+        forecast: json['weather'][0]['description'],
+        iconString: json['weather'][0]['icon'],
+        temp_min: json['main']['temp_min'],
+        temp_max: json['main']['temp_max'],
+        datetime: DateTime.parse(json['dt']));
+  }
+}
+
+class Weather4DaysHourly {
+  dynamic firstDay;
+  dynamic secondDay;
+  dynamic thirdDay;
+  dynamic forthDay;
+
+  Weather4DaysHourly(
+      {this.firstDay, this.secondDay, this.thirdDay, this.forthDay});
+
+  factory Weather4DaysHourly.fromJson(Map<String, dynamic> json) {
+    dynamic first = json['list'][0];
+    dynamic second = json['list'][24];
+    dynamic third = json['list'][48];
+    dynamic forth = json['list'][72];
+
+    Map<int, String> weekday = {
+      1: 'Mon',
+      2: 'Tue',
+      3: 'Wed',
+      4: 'Thu',
+      5: 'Fri',
+      6: 'Sat',
+      7: 'Sun'
+    };
+    return Weather4DaysHourly(
+      firstDay: WeatherHourly(
+          forecast: first['weather'][0]['description'],
+          iconString: first['weather'][0]['icon'],
+          temp_min: first['main']['temp_min'],
+          temp_max: first['main']['temp_max'],
+          datetime: DateTime.parse(first['dt'])),
+      secondDay: WeatherHourly(
+          forecast: second['weather'][0]['description'],
+          iconString: second['weather'][0]['icon'],
+          temp_min: second['main']['temp_min'],
+          temp_max: second['main']['temp_max'],
+          datetime: DateTime.parse(first['dt'])),
+      thirdDay: WeatherHourly(
+          forecast: third['weather'][0]['description'],
+          iconString: third['weather'][0]['icon'],
+          temp_min: third['main']['temp_min'],
+          temp_max: third['main']['temp_max'],
+          datetime: DateTime.parse(third['dt'])),
+      forthDay: WeatherHourly(
+          forecast: forth['weather'][0]['description'],
+          iconString: forth['weather'][0]['icon'],
+          temp_min: forth['main']['temp_min'],
+          temp_max: forth['main']['temp_max'],
+          datetime: DateTime.parse(forth['dt'])),
+    );
+  }
+}
+
 class Weather24Hour {
   dynamic forecast;
   dynamic temperatureLow;
