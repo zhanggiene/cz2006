@@ -8,8 +8,8 @@ import 'package:cz2006/models/User.dart';
 
 class EmailService {
   void sendMail(User user, Coupon coupon) async {
-    String username = 'zhangzhuyan53@gmail.com';
-    String password = 'Dhsh2019';
+    String username = '';
+    String password = '';
 
     String userMail = await AuthenticationServices().getMail();
     int randomNum = (Random().nextDouble() * 1000000).round();
