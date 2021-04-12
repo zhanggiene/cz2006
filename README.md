@@ -11,6 +11,6 @@ https://youtu.be/-RjNAX160GM
 
 # screenshot
 
-![alt text](https://github.com/zhanggiene/cz2006/blob/master/Screenshot%202021-04-11%20at%202.12.50%20PM.png=250x)
-![alt text](https://github.com/zhanggiene/cz2006/blob/master/Screenshot%202021-04-11%20at%202.14.53%20PM.png=250x)
+![alt text](https://github.com/zhanggiene/cz2006/blob/master/Screenshot%202021-04-11%20at%202.12.50%20PM.png =250x)
+![alt text](https://github.com/zhanggiene/cz2006/blob/master/Screenshot%202021-04-11%20at%202.14.53%20PM.png =250x)
 
