@@ -1,20 +1,12 @@
-# cz2006
+# This is CZ2006 software engineering group project mosquito, using flutter and firebase.
 
+A normal registered user will be able to view the NEA identified dengue clusters. Our app is also like a social media app. For example, if the user identifies any potential breeding ground, he can upload a photo of it to share with the community. 
 
-# todo
+Coins can be collected when a user uploads a post or when his posts receive likes from others. The coins can be used to redeem coupons. 
 
-1. do testing 
-2, breeding ground reported is the number of post 
-3, solve the overflow bugs
-4, edit report, add pictures. user can change name and profile display what information about dengue cluster. 
+If you’re an admin, you are able to manage the coupons such as adding new coupons and deleting expired ones. Admin can also delete the community posts that were uploaded by any normal user if that potential breeding ground has been resolved, or the post content is not useful enough.
 
-9.1.  The user shall gain 10 coins for every post uploaded
-	9.2. The user shall gain 2 coins for every “like” received from other user
-9.3. The user shall gain 10 coins for every “like” received from admin
+# youtube link
+https://youtu.be/-RjNAX160GM 
 
-forgot password
-chronological order latest on on top. done
-
-after creating the post no need refresh 
-
-use get coins instead of using user.coin
+# screenshot
