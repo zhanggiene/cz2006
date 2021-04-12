@@ -23,7 +23,6 @@ class PostController {
 
   Future<void> uploadPosts(List<File> images) async {
     _post.images.clear();
-    print("file length is ${images.length}");
     for (var i = 0; i < images.length; i++) {
       // print(images[i].uri);
       _post.images.add(await _storageService.uploadPostImage(images[i]));
@@ -75,7 +74,7 @@ class PostController {
       postList.add(post);
     });
     print("sorting post in chrononogical order");
-    postList.sort((a, b) => a.timeOfCreation.compareTo(b.timeOfCreation));
+    postList.sort((b, a) => a.timeOfCreation.compareTo(b.timeOfCreation));
     return postList;
   }
 }

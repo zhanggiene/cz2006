@@ -23,24 +23,27 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> {
   User currentUser = locator.get<UserController>().currentuser;
   final NameController = TextEditingController();
+  int userRewards;
+  User user;
   @override
   void initState() {
     super.initState();
     NameController.text = currentUser.name;
+    getCurrentUser().then((value) {
+      setState(() {});
+    });
+  }
+
+  Future<void> getCurrentUser() async {
+    user = locator.get<UserController>().currentuser;
+    userRewards = await locator.get<UserController>().getCoins();
+    print(userRewards);
+
+    user.imageURL = await locator.get<UserController>().downloadurl();
   }
 
   @override
   Widget build(BuildContext context) {
-    User user;
-    String userRewards;
-    Future<void> getCurrentUser() async {
-      user = locator.get<UserController>().currentuser;
-      userRewards = user.coins.toString();
-      user.imageURL = await locator.get<UserController>().downloadurl();
-    }
-
-    getCurrentUser();
-
     return Scaffold(
         body: Container(
             padding: EdgeInsets.only(left: 16, top: 25, right: 16),
@@ -147,7 +150,8 @@ class _ProfileViewState extends State<ProfileView> {
                                   backgroundColor: Colors.yellow,
                                   radius: 15.0),
                               Text(
-                                userRewards,
+                                //widuserRewards.toString(),
+                                userRewards.toString(),
                                 style: TextStyle(
                                   fontSize: 20,
                                   color: Colors.black,

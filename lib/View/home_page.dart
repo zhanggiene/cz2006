@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _checkEmailVerification();
-    selectedpage = 3;
+    selectedpage = 0;
   }
 
   @override

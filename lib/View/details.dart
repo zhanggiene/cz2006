@@ -15,7 +15,8 @@ final primaryColor = Colors.green[400];
 
 class Detail extends StatefulWidget {
   final Post post;
-  const Detail({this.post});
+  final Function() notifyparent;
+  const Detail({this.post, this.notifyparent});
 
   @override
   _DetailState createState() => _DetailState();
@@ -30,16 +31,13 @@ class _DetailState extends State<Detail> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        title: Text(widget.post.title)),
+      appBar: AppBar(title: Text(widget.post.title)),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Container(
-
           alignment: Alignment.center,
-    width: double.infinity,
-    height: double.infinity,
-
+          width: double.infinity,
+          height: double.infinity,
           child: SingleChildScrollView(
             child: Center(
                 child: Column(
@@ -59,8 +57,8 @@ class _DetailState extends State<Detail> {
                                 child: Container(
                                   margin: EdgeInsets.all(5.0),
                                   child: ClipRRect(
-                                      borderRadius:
-                                          BorderRadius.all(Radius.circular(5.0)),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(5.0)),
                                       child: Stack(
                                         children: <Widget>[
                                           Image.network(item,
@@ -73,7 +71,8 @@ class _DetailState extends State<Detail> {
                                               decoration: BoxDecoration(
                                                 gradient: LinearGradient(
                                                   colors: [
-                                                    Color.fromARGB(200, 0, 0, 0),
+                                                    Color.fromARGB(
+                                                        200, 0, 0, 0),
                                                     Color.fromARGB(0, 0, 0, 0)
                                                   ],
                                                   begin: Alignment.bottomCenter,
@@ -106,7 +105,8 @@ class _DetailState extends State<Detail> {
                   child: Align(
                     child: Text(
                       "Description:",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -117,7 +117,8 @@ class _DetailState extends State<Detail> {
                   child: Align(
                     child: Text(
                       "Location:",
-                      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                     ),
                     alignment: Alignment.centerLeft,
                   ),
@@ -171,44 +172,52 @@ class _DetailState extends State<Detail> {
                   onTap: (isLiked) async {
                     if (!isLiked) {
                       locator.get<PostController>().likePost(
-                          locator.get<UserController>().currentuser, widget.post);
-                      locator.get<UserController>().updateCoins(10);
+                          locator.get<UserController>().currentuser,
+                          widget.post);
+                      //locator.get<UserController>().updateCoins(10);
+                      if (locator.get<UserController>().currentuser.isAdmin) {
+                        locator
+                            .get<UserController>()
+                            .updateOtherUserCoins(widget.post.userID, 10);
+                        print("liked by admin");
+                      } else {
+                        locator
+                            .get<UserController>()
+                            .updateOtherUserCoins(widget.post.userID, 2);
+                        print("liked by user");
+                      }
                     }
                     return true;
                   },
                 ),
+                (locator.get<UserController>().currentuser.isAdmin)
+                    ? RaisedButton(
+                        onPressed: () {
+                          locator.get<PostController>().deletePost(widget.post);
+                          Fluttertoast.showToast(
+                              msg: "this post has been deleted successfully",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 3,
+                              backgroundColor: primaryColor,
+                              textColor: Colors.white,
+                              fontSize: 16.0);
+                          widget.notifyparent();
 
-
-                RaisedButton(
-                                    onPressed: () {
-
-                                      locator.get<PostController>().deletePost(widget.post);
-                  Fluttertoast.showToast(
-                      msg: "this post has been deleted successfully",
-                      toastLength: Toast.LENGTH_SHORT,
-                      gravity: ToastGravity.BOTTOM,
-                      timeInSecForIosWeb: 3,
-                      backgroundColor: primaryColor,
-                      textColor: Colors.white,
-                      fontSize: 16.0);
-
-                  Navigator.pop(context);
-
-
-
-
-                                    },
-                                    color: Colors.red,
-                                    child: Text(
-                                      " DELETE",
-                                      style: TextStyle(
-                                          fontSize: 14,
-                                          letterSpacing: 2.2,
-                                          color: Colors.white),
-                                    ),
-                                    padding: EdgeInsets.symmetric(horizontal: 43),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(20)))
+                          Navigator.pop(context);
+                        },
+                        color: Colors.red,
+                        child: Text(
+                          " DELETE",
+                          style: TextStyle(
+                              fontSize: 14,
+                              letterSpacing: 2.2,
+                              color: Colors.white),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 43),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20)))
+                    : Container(),
               ],
             )),
           ),

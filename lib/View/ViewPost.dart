@@ -23,11 +23,18 @@ class _ViewPostState extends State<ViewPost> {
     getdata();
   }
 
+  refresh() {
+    setState(() {
+      getdata();
+    });
+  }
+
   getdata() async {
     print("to get all posts");
     locator.get<PostController>().getPostByTime().then((value) {
-      posts = value;
+      
       setState(() {
+        posts = value;
         loading = false;
       });
     });
@@ -62,15 +69,15 @@ class _ViewPostState extends State<ViewPost> {
                             DateTime.fromMicrosecondsSinceEpoch(
                                 posts[index].timeOfCreation))),
                       ),
-                      onTap: () {
-                        Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        Detail(post: posts[index])))
-                            .then((value) => setState(() {
-                                  getdata();
-                                }));
+                      onTap: () async {
+                        final value = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Detail(
+                                    post: posts[index],
+                                    notifyparent: refresh)));
+                        getdata();
+                        setState(() {});
                       });
                 },
                 separatorBuilder: (BuildContext context, int index) {

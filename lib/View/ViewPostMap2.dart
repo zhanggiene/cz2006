@@ -48,7 +48,11 @@ class _ViewPostState extends State<ViewDengueMap> {
       //print(currentLocation.latitude);
     });
     setInitialLocation();
-    getdata();
+    getdata().then((value) {
+      setState(() {
+        loading = false;
+      });
+    });
   }
 
   void setInitialLocation() async {
@@ -61,7 +65,7 @@ class _ViewPostState extends State<ViewDengueMap> {
     // hard-coded destination for this example
   }
 
-  getdata() async {
+  Future<void> getdata() async {
     var data = await rootBundle.loadString('images/data.geojson');
     var lists = json.decode(data)['features'];
     for (var i = 0; i < lists.length; i++) {
@@ -70,10 +74,6 @@ class _ViewPostState extends State<ViewDengueMap> {
       //print(cluster.locations);
       clusters.add(cluster);
     }
-
-    setState(() {
-      loading = false;
-    });
   }
 
   bool rayCastIntersect(LatLng tap, LatLng vertA, LatLng vertB) {
@@ -191,7 +191,8 @@ class _ViewPostState extends State<ViewDengueMap> {
 
 Widget infoCard(context, double position, Cluster p) {
   if (p == null) {
-    return Text("check your internet");
+    //return Text("check your internet");
+    return Container();
   }
   return AnimatedPositioned(
       bottom: position,
@@ -232,7 +233,7 @@ Widget infoCard(context, double position, Cluster p) {
                     ),
                     ConstrainedBox(
                         constraints:
-                            BoxConstraints(maxWidth: 290, maxHeight: 30),
+                            BoxConstraints(maxWidth: 280, maxHeight: 30),
                         child: AutoSizeText(
                           p.location.toString(),
                           minFontSize: 11,
@@ -249,7 +250,7 @@ Widget infoCard(context, double position, Cluster p) {
                     ),
                     ConstrainedBox(
                         constraints:
-                            BoxConstraints(maxWidth: 310, maxHeight: 60),
+                            BoxConstraints(maxWidth: 290, maxHeight: 60),
                         child: AutoSizeText(
                           p.home.toString(),
                           minFontSize: 10,
@@ -266,7 +267,7 @@ Widget infoCard(context, double position, Cluster p) {
                     ),
                     ConstrainedBox(
                         constraints:
-                            BoxConstraints(maxWidth: 260, maxHeight: 70),
+                            BoxConstraints(maxWidth: 250, maxHeight: 70),
                         child: AutoSizeText(
                           p.public_places.toString(),
                           minFontSize: 10,
@@ -283,7 +284,7 @@ Widget infoCard(context, double position, Cluster p) {
                     ),
                     ConstrainedBox(
                         constraints:
-                            BoxConstraints(maxWidth: 260, maxHeight: 20),
+                            BoxConstraints(maxWidth: 250, maxHeight: 20),
                         child: AutoSizeText(
                           p.construction.toString(),
                           minFontSize: 10,
