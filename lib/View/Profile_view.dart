@@ -23,7 +23,7 @@ class ProfileView extends StatefulWidget {
 class _ProfileViewState extends State<ProfileView> {
   User currentUser = locator.get<UserController>().currentuser;
   final NameController = TextEditingController();
-  int userRewards;
+  int userRewards=0;
   User user;
   @override
   void initState() {
